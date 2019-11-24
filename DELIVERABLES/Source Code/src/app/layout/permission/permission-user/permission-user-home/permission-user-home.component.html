@@ -1,0 +1,186 @@
+<div *ngIf="listPermission && listPermission.length > 0">
+  <div class="row mt-3">
+    <div class="col-md-3"></div>
+    <div class="col-md-2 text-center  text-nowrap">
+      Tất cả người dùng
+    </div>
+    <div class="col-md-2 text-center  text-nowrap">
+      Theo người dùng
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" [checked]="checkAllCheckboxByAll" (click)="toggleSelectAll($event.target.checked, true)" #inputAllUser>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--disabled" [checked]="checkAllCheckboxByCurrent" (click)="toggleSelectAll($event.target.checked, false)" [disabled]="inputAllUser.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row mt-2">
+    <div class="col-md-3 font-weight-bold">Xem báo cáo thống kê</div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" [checked]="checkAllContactListByAll" (click)="toggleContactList($event.target.checked, true)" #inputStatisticAll>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--disabled" [checked]="checkAllContactListByCurrent" (click)="toggleContactList($event.target.checked, false)" [disabled]="inputStatisticAll.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Tiềm năng</div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" [checked]="getCheckedPermission('StatisticsProspect', true)" value="StatisticsProspect" (click)="clickPermission($event.target.value, $event.target.checked, true, homeProspectAll, homeProspectCurrent)" #homeProspectAll>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--disabled" [checked]="getCheckedPermission('StatisticsProspect', false) || homeProspectAll.checked" value="StatisticsProspect" (click)="clickPermission($event.target.value, $event.target.checked, false, homeProspectAll, homeProspectCurrent)" [disabled]="homeProspectAll.checked" #homeProspectCurrent>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Khách hàng</div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" [checked]="getCheckedPermission('HomeCustomer', true)" value="HomeCustomer" (click)="clickPermission($event.target.value, $event.target.checked, true, homeCustomerAll, homeCustomerCurrent)" #homeCustomerAll>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--disabled" [checked]="getCheckedPermission('HomeCustomer', false) || homeCustomerAll.checked" value="HomeCustomer" (click)="clickPermission($event.target.value, $event.target.checked, false, homeCustomerAll, homeCustomerCurrent)" [disabled]="homeCustomerAll.checked" #homeCustomerCurrent>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Liên hệ</div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" [checked]="getCheckedPermission('HomeContact', true)" value="HomeContact" (click)="clickPermission($event.target.value, $event.target.checked, true, homeContactAll, homeContactCurrent)" #homeContactAll>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--disabled" [checked]="getCheckedPermission('HomeContact', false) || homeContactAll.checked" value="HomeContact" (click)="clickPermission($event.target.value, $event.target.checked, false, homeContactAll, homeContactCurrent)" [disabled]="homeContactAll.checked" #homeContactCurrent>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Cơ hội</div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" [checked]="getCheckedPermission('HomeOpportunity', true)" value="HomeOpportunity" (click)="clickPermission($event.target.value, $event.target.checked, true, homeOpportunityAll, homeOpportunityCurrent)" #homeOpportunityAll>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--disabled" [checked]="getCheckedPermission('HomeOpportunity', false) || homeOpportunityAll.checked" value="HomeOpportunity" (click)="clickPermission($event.target.value, $event.target.checked, false, homeOpportunityAll, homeOpportunityCurrent)" [disabled]="homeOpportunityAll.checked" #homeOpportunityCurrent>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Chiến dịch</div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" [checked]="getCheckedPermission('HomeCampaign', true)" value="HomeCampaign" (click)="clickPermission($event.target.value, $event.target.checked, true, homeCampaignAll, homeCampaignCurrent)" #homeCampaignAll>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--disabled" [checked]="getCheckedPermission('HomeCampaign', false) || homeCampaignAll.checked" value="HomeCampaign" (click)="clickPermission($event.target.value, $event.target.checked, false, homeCampaignAll, homeCampaignCurrent)" [disabled]="homeCampaignAll.checked" #homeCampaignCurrent>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  
+  <!-- No use -->
+  <!-- <div class="row">
+    <div class="col-md-3 text-nowrap"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Xem thông báo Sinh nhật, Đánh giá</div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" [checked]="getCheckedPermission('HomeNotification', true)" value="HomeNotification" (click)="clickPermission($event.target.value, $event.target.checked, true, homeNotificationAll, homeNotificationCurrent)" #homeNotificationAll>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--disabled" [checked]="getCheckedPermission('HomeNotification', false) || homeNotificationAll.checked" value="HomeNotification" (click)="clickPermission($event.target.value, $event.target.checked, false, homeNotificationAll, homeNotificationCurrent)" [disabled]="homeNotificationAll.checked" #homeNotificationCurrent>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div> -->
+  <div class="row mt-2">
+    <div class="col-md-3 font-weight-bold">Xem sự kiện</div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" [checked]="getCheckedPermission('HomeViewTask', true)" value="HomeViewTask" (click)="clickPermission($event.target.value, $event.target.checked, true, homeViewTaskAll, homeViewTaskCurrent)" #homeViewTaskAll>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--disabled" [checked]="getCheckedPermission('HomeViewTask', false) || homeViewTaskAll.checked" value="HomeViewTask" (click)="clickPermission($event.target.value, $event.target.checked, false, homeViewTaskAll, homeViewTaskCurrent)" [disabled]="homeViewTaskAll.checked" #homeViewTaskCurrent>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3 font-weight-bold">Xem công việc</div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" [checked]="getCheckedPermission('HomeViewEvent', true)" value="HomeViewEvent" (click)="clickPermission($event.target.value, $event.target.checked, true, homeViewEventAll, homeViewEventCurrent)" #homeViewEventAll>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--disabled" [checked]="getCheckedPermission('HomeViewEvent', false) || homeViewEventAll.checked" value="HomeViewEvent" (click)="clickPermission($event.target.value, $event.target.checked, false, homeViewEventAll, homeViewEventCurrent)" [disabled]="homeViewEventAll.checked" #homeViewEventCurrent>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3 font-weight-bold">Xem thay đổi gần đây</div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" [checked]="getCheckedPermission('HomeViewAudit', true)" value="HomeViewAudit" (click)="clickPermission($event.target.value, $event.target.checked, true, homeViewAuditAll, homeViewAuditCurrent)" #homeViewAuditAll>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--disabled" [checked]="getCheckedPermission('HomeViewAudit', false) || homeViewAuditAll.checked" value="HomeViewAudit" (click)="clickPermission($event.target.value, $event.target.checked, false, homeViewAuditAll, homeViewAuditCurrent)" [disabled]="homeViewAuditAll.checked" #homeViewAuditCurrent>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="my-4 text-center">
+    <button class="btn btn-secondary ml-2 cursor-disabled" disabled (click)="refresh(true)">
+      <i class="fa fa-angle-left mx-2" aria-hidden="true"></i> Trở về
+    </button>
+    <button class="btn btn-primary ml-2" routerLink="../prospect">
+      Tiếp <i class="fa fa-angle-right mx-2" aria-hidden="true"></i>
+    </button>
+  </div>
+</div>

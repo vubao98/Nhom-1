@@ -1,0 +1,14 @@
+:host /deep/ {
+    .btn-secondary {
+        background-color: #b0b0b0;
+    }
+}
+
+.custom-control-input--disabled:disabled ~ .custom-control-indicator {
+    background-color: #17a2b8;
+    opacity: .5;
+}
+
+.custom-control-input--none:disabled ~ .custom-control-indicator {
+    background-image: none;
+}

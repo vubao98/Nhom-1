@@ -1,0 +1,148 @@
+<div *ngIf="listPermission && listPermission.length > 0">
+
+  <div class="row mt-2">
+    <div class="col-md-3 font-weight-bold">Quản lý nhóm người dùng</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input"  [checked]="checkAllProspectList" (click)="toggleProspectList($event.target.checked)">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Thêm mới nhóm người dùng</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input"  (click)="clickPermission($event.target.value)" value="PermissionAddUserGroup" [checked]="getCheckedPermission('PermissionAddUserGroup')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Xem thông tin nhóm người dùng</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input"  (click)="clickPermission($event.target.value)" value="PermissionViewUserGroupInformation" [checked]="getCheckedPermission('PermissionViewUserGroupInformation')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Sửa nhóm người dùng</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input"  (click)="clickPermission($event.target.value)" value="PermissionEditUserGroup" [checked]="getCheckedPermission('PermissionEditUserGroup')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Xóa nhóm người dùng</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input"  (click)="clickPermission($event.target.value)" value="PermissionDeleteUserGroup" [checked]="getCheckedPermission('PermissionDeleteUserGroup')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Phân quyền nhóm người dùng</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input"  (click)="clickPermission($event.target.value)" value="PermissionSetUserGroupPermissions" [checked]="getCheckedPermission('PermissionSetUserGroupPermissions')" #viewProspectInfo>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-md-3 font-weight-bold">Phân quyền</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" [disabled]="!viewProspectInfo.checked" [checked]="checkAllProspectInfo && viewProspectInfo.checked" (click)="toggleProspectInfo($event.target.checked)">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Trang chủ</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" [disabled]="!viewProspectInfo.checked" (click)="clickPermission($event.target.value)" value="PermissionHome" [checked]="getCheckedPermission('PermissionHome') && viewProspectInfo.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Tiềm năng</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" [disabled]="!viewProspectInfo.checked" (click)="clickPermission($event.target.value)" value="PermissionProspect" [checked]="getCheckedPermission('PermissionProspect') && viewProspectInfo.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Khách hàng</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" [disabled]="!viewProspectInfo.checked" (click)="clickPermission($event.target.value)" value="PermissionCustomer" [checked]="getCheckedPermission('PermissionCustomer') && viewProspectInfo.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Liên hệ</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" [disabled]="!viewProspectInfo.checked" (click)="clickPermission($event.target.value)" value="PermissionContact" [checked]="getCheckedPermission('PermissionContact') && viewProspectInfo.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Cơ hội</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" [disabled]="!viewProspectInfo.checked" (click)="clickPermission($event.target.value)" value="PermissionOpportunity" [checked]="getCheckedPermission('PermissionOpportunity') && viewProspectInfo.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Chiến dịch</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" [disabled]="!viewProspectInfo.checked" (click)="clickPermission($event.target.value)" value="PermissionCampaign" [checked]="getCheckedPermission('PermissionCampaign') && viewProspectInfo.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Hoạt động</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" [disabled]="!viewProspectInfo.checked" (click)="clickPermission($event.target.value)" value="PermissionActivity" [checked]="getCheckedPermission('PermissionActivity') && viewProspectInfo.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Quản lý phân quyền</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" [disabled]="!viewProspectInfo.checked" (click)="clickPermission($event.target.value)" value="PermissionManagePermission" [checked]="getCheckedPermission('PermissionManagePermission') && viewProspectInfo.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="my-4 text-center">
+    <button class="btn btn-secondary ml-2" routerLink="../activity">
+      <i class="fa fa-angle-left mx-2" aria-hidden="true"></i> Trở về
+    </button>
+    <button class="btn btn-primary ml-2" routerLink="../statistics">
+      Tiếp <i class="fa fa-angle-right mx-2" aria-hidden="true"></i>
+    </button>
+  </div>
+</div>

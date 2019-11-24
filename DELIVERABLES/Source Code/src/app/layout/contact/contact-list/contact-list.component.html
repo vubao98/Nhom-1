@@ -1,0 +1,289 @@
+<div [@routerTransition]>
+    <div class="search-box d-flex">
+        <h5 *ngIf="isContactViewInformation || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="mr-auto d-flex align-items-end">Danh sách liên hệ</h5>
+        <div *ngIf="isContactViewInformation || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="input-group">
+            <span class="input-group-addon">Tìm kiếm theo</span>
+            <input type="text" class="form-control" placeholder="Mã liên hệ, tên, họ, sđt..."
+                [value]="searchTerm$.value" (keyup)="searchTerm$.next($event.target.value)">
+        </div>
+
+        <div *ngIf="isCongCu || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="btn-group ml-2" [class.ml-auto]="!isContactViewInformation  && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin" ngbDropdown>
+            <button type="button" class="btn btn-primary" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                Công cụ &nbsp;
+            </button>
+            <div class="dropdown-menu" ngbDropdownMenu>
+                <a *ngIf="isContactDeleteContact || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="dropdown-item" (click)="multiDelete()">Xóa</a>
+                <div *ngIf="isContactDeleteContact && (isContactImportDownloadTemplate || isContactExportFile) || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="dropdown-divider"></div>
+                <div *ngIf="isContactImportDownloadTemplate || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="fileUpload dropdown-item">
+                    <a>Nhập file</a>
+                    <input type="file" class="upload" (change)="fileChange($event)" />
+                </div>
+                <a *ngIf="isContactExportFile || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="dropdown-item" class="dropdown-item" (click)="exportFileExcel()">Xuất file</a>
+                <div *ngIf="(isContactImportDownloadTemplate && isContactExportFile) || (isContactImportDownloadTemplate && isContactDeleteContact) || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="dropdown-divider"></div>
+                <a *ngIf="isContactImportDownloadTemplate || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="dropdown-item" (click)="downTemplate()">Tải template</a>
+            </div>
+        </div>
+
+
+        <button *ngIf="isContactAddContact || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="btn btn-primary ml-2" [class.ml-auto]="!isContactViewInformation && !isCongCu && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin" [routerLink]="['/contact/create']">
+            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp; Thêm liên hệ</button>
+        <button *ngIf="isContactViewInformation || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="btn btn-primary ml-2" (click)="refresh(true)">
+            <i class="fa fa-refresh" aria-hidden="true"></i>
+        </button>
+    </div>
+    <hr *ngIf="isContactViewInformation || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+    <div *ngIf="isContactViewInformation || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="d-flex justify-content-center align-items-center filter-div mt--3">
+        <div class="filter-bar" appSameHeight="col-setting">
+            <div class="form-inline align-items-end">
+                <div class="form-group flex-column align-items-start">
+                    <label for="prospectSource" class="form-label">Nguồn tiềm năng</label>
+                    <span class="custom-dropdown">
+                        <select class="form-control" [(ngModel)]="filterModel.prospectSource">
+                            <option [ngValue]="null">--Lựa chọn--</option>
+                            <option *ngFor="let item of prospectSourceList | async" [value]="item.id">{{item.text}}
+                            </option>
+                        </select>
+                    </span>
+                </div>
+                <div class="form-group ml-sm-2 flex-column align-items-start">
+                    <label for="business" class="form-label">Nhóm phụ trách</label>
+                    <span class="custom-dropdown">
+                        <i *ngIf="!((employeeGroupList | async)?.length > 0)" class="ui-autocomplete-loader fa fa-circle-o-notch fa-spin fa-fw ng-star-inserted ui-autocomplete-loader--custom"></i>
+                        <select class="form-control" [(ngModel)]="filterModel.assignToGroup" (change)="assignToGroupChange($event.target.value)">
+                            <option [value]="null">--Lựa chọn--</option>
+                            <option [value]="0">Chưa có nhóm phụ trách</option>
+                            <option *ngFor="let item of employeeGroupList | async" [value]="item.id">
+                                {{item.text}}</option>
+                        </select>
+                    </span>
+                </div>
+                <div class="form-group ml-sm-2 flex-column align-items-start">
+                    <label for="business" class="form-label">Người phụ trách</label>
+                    <span class="custom-dropdown">
+                        <i *ngIf="!((employeeList | async)?.length > 0)" class="ui-autocomplete-loader fa fa-circle-o-notch fa-spin fa-fw ng-star-inserted ui-autocomplete-loader--custom"></i>
+                        <select class="form-control" [(ngModel)]="filterModel.assignTo">
+                            <option [ngValue]="null">--Lựa chọn--</option>
+                            <option *ngFor="let item of employeeList | async" [value]="item.id">
+                                {{item.text}}</option>
+                        </select>
+                    </span>
+                </div>
+                <div class="form-group ml-sm-2 flex-column align-items-start">
+                    <label for="business" class="form-label">Sinh nhật trong tháng</label>
+                    <span class="custom-dropdown">
+                        <select class="form-control" [(ngModel)]="filterModel.month">
+                            <option [ngValue]="null">Tất cả</option>
+                            <option [value]="month">Có</option>
+                        </select>
+                    </span>
+                </div>
+                <button type="submit" class="btn btn-primary ml-sm-3" (click)="filter()">
+                    <i class="fa fa-filter" aria-hidden="true"></i>&nbsp; Lọc
+                </button>
+                <button class="btn btn-secondary ml-sm-3" (click)="clearFilter()">
+                    <i class="fa fa-times"></i>&nbsp; Xóa lọc
+                </button>
+            </div>
+        </div>
+        <div class="btn-group col-setting" dropdown #colSetting="bs-dropdown" placement="bottom right"
+            [autoClose]="false">
+            <div id="button-alignment" dropdownToggle class="dropdown-toggle d-flex btn-col"
+                aria-controls="dropdown-alignment">
+                <i class="fa fa-cog"></i> Cột
+                <i class="fa fa-caret-down" aria-hidden="true"></i>
+            </div>
+            <div id="dropdown-alignment" *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu"
+                aria-labelledby="button-alignment">
+                <div class="popup-dynamic-col">
+                    <div class="d-flex justify-content-between">
+                        <div class="">{{columnSelectedCount}}/{{listColumnSetting?.length}} cột được chọn</div>
+                        <div>
+                            <span class="span-cursor" (click)="chooseAllColumnSetting(colSetting)">Chọn tất cả</span>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="wrapper">
+                        <div class="form-check-inline" *ngFor="let item of listColumnSettingTemp">
+                            <div class="d-flex">
+                                <div>
+                                    <input type="checkbox" [ngModel]="!item.hidden"
+                                        (click)="columnSettingClick(item.id)" class="pointer mt-1">
+                                </div>
+                                <div class="pointer" (click)="columnSettingClick(item.id)"> &nbsp;{{item.fieldCaption}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div>
+                        <div class="d-flex">
+                            <div class="mr-auto">
+                                <div class="center-parent w-100 h-100">
+                                    <div>
+                                        <span class="span-cursor" (click)="setColumnSetting(colSetting, true)">Trở về
+                                            mặc định
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-1">
+                                <button class="btn btn-secondary" (click)="isCancel(colSetting)">Hủy</button>
+                            </div>
+                            <div class="p-1 pr-0">
+                                <button class="btn btn-primary" (click)="setColumnSetting(colSetting)">Áp dụng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="isContactViewInformation || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="b-pin-col-wrapper">
+        <ngx-loading [show]="loading"></ngx-loading>
+        <div class="b-pin-col-scroller" id="wrap1" #wrap1 (scroll)="syncScroll1()">
+            <table class="b-pin-col-table table" #tablePin>
+                <thead>
+                    <tr>
+                        <th class="text-center b-pin-col-sticky-col th-stt-pad">
+                            <div class="d-flex justify-content-around align-items-center h-100">
+                                <span>
+                                    <label class="custom-control custom-checkbox stt-checkbox--mar">
+                                        <input type="checkbox" class="custom-control-input"
+                                            [(ngModel)]=checkboxSeclectAll
+                                            (change)="onSelectAll($event.target.checked)">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </span>
+                                <span>STT</span>
+                            </div>
+                        </th>
+                        <th [class.d-none]="getColumnShow('ARCustomerContactNo')">Mã liên hệ</th>
+                        <th [class.d-none]="getColumnShow('ARCustomerContactTitle')">D/xưng</th>
+                        <th [class.d-none]="getColumnShow('ARCustomerContactName')">Họ và tên</th>
+                        <th [class.d-none]="getColumnShow('ARCustomerContactBirthday')">Ngày sinh nhật</th>
+                        <th [class.d-none]="getColumnShow('ARCustomerContactPhone')">ĐT phòng</th>
+                        <th [class.d-none]="getColumnShow('ARCustomerContactCellularPhone')">ĐT di động</th>
+                        <th [class.d-none]="getColumnShow('ARCustomerContactHomePhone')">ĐT nhà riêng</th>
+                        <th [class.d-none]="getColumnShow('ARCustomerContactSecondaryPhone')">ĐT phụ</th>
+                        <th [class.d-none]="getColumnShow('ARCustomerContactEmail1')">Địa chỉ email</th>
+                        <th [class.d-none]="getColumnShow('ARCustomers')">Tên khách hàng</th>
+                        <th [class.d-none]="getColumnShow('ARCustomerContactAssistant')">Trợ lý</th>
+                        <th [class.d-none]="getColumnShow('ARCustomerContactAssistantPhone')">ĐT trợ lý</th>
+                        <th [class.d-none]="getColumnShow('ARCustomerContactJobTitle')">Chức danh</th>
+                        <th [class.d-none]="getColumnShow('ARCustomerContactDepartment')">Phòng ban</th>
+                        <th [class.d-none]="getColumnShow('ARCustomerContactPotentialSource')">Nguồn tiềm năng</th>
+                        <th [class.d-none]="getColumnShow('FK_HREmployeeID')">Người phụ trách</th>
+                        <th [class.d-none]="getColumnShow('FK_HRGroupID')">Nhóm phụ trách</th>
+                        <th [class.d-none]="getColumnShow('AAUpdatedDate')">Thời điểm sửa đổi</th>
+                        <th [class.d-none]="getColumnShow('ARCustomerContactAddress')">Địa chỉ</th>
+                        <th [class.d-none]="getColumnShow('ARCustomerContactInformation')">Mô tả</th>
+                        <th class="table-action b-pin-col-sticky-col-right text-center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of pagedResult.items; let i = index" appRowHover>
+                        <td class="text-center b-pin-col-sticky-col td-stt--pad">
+                            <div class="d-flex justify-content-around align-items-center h-100">
+                                <span>
+                                    <label class="custom-control custom-checkbox stt-checkbox--mar">
+                                        <input type="checkbox" class="custom-control-input"
+                                            [(ngModel)]="item.checkboxSelected">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </span>
+                                <span class="ml-2">
+                                    {{i + pagedResult.currentPage * pagedResult.pageSize + 1}}
+                                </span>
+                            </div>
+                        </td>
+                        <td [class.d-none]="getColumnShow('ARCustomerContactNo')"><a
+                                [routerLink]="isEyeVisible() || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin ? ['../detail', item.id] : []"
+                                [title]="item.contactNumber">{{ item.contactNumber }}</a></td>
+                        <td [class.d-none]="getColumnShow('ARCustomerContactTitle')">
+                            {{ (item.salutation | translate) || 'Không có' }}</td>
+                        <td [class.d-none]="getColumnShow('ARCustomerContactName')">
+                            <a [routerLink]="isEyeVisible() || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin ? ['../detail', item.id, 'spec'] : []"
+                                [title]="item.name">{{ item.name || 'Không có'     }}</a>
+                        </td>
+                        <td [class.d-none]="getColumnShow('ARCustomerContactBirthday')">
+                            {{ (item.dob | date:'dd/MM/yyyy')  || 'Không có'}}</td>
+                        <td [class.d-none]="getColumnShow('ARCustomerContactPhone')">
+                            <span appPhoneNumberCallable *ngIf="item.phone">{{item.phone }}</span>
+                            <span *ngIf="!(item.phone)">Không có</span>
+                        </td>
+                        <td [class.d-none]="getColumnShow('ARCustomerContactCellularPhone')">
+                            <span appPhoneNumberCallable
+                                *ngIf="item.assignTo && item.mobilePhone">{{ item.assignTo && item.mobilePhone }}</span>
+                            <span *ngIf="!(item.assignTo && item.mobilePhone)">Không có</span>
+                        </td>
+                        <td [class.d-none]="getColumnShow('ARCustomerContactHomePhone')">
+                            <span appPhoneNumberCallable
+                                *ngIf="item.assignTo && item.homePhone">{{ item.assignTo && item.homePhone }}</span>
+                            <span *ngIf="!(item.assignTo && item.homePhone)">Không có</span>
+                        </td>
+                        <td [class.d-none]="getColumnShow('ARCustomerContactSecondaryPhone')">
+                            <span appPhoneNumberCallable *ngIf="item.secondaryPhone">{{item.secondaryPhone }}</span>
+                            <span *ngIf="!(item.secondaryPhone)">Không có</span>
+                        </td>
+                        <td [class.d-none]="getColumnShow('ARCustomerContactEmail1')">
+                            <a *ngIf="item.email" [href]="'mailto:' + item.email"
+                                [title]="item.email">{{ item.email || 'Không có'  }}</a>
+                            <span *ngIf="!item.email">{{'Không có'}}</span>
+                        </td>
+                        <td [class.d-none]="getColumnShow('ARCustomers')" [title]="item.companyName">
+                            {{ item.companyName || 'Không có'  }}</td>
+                        <td [class.d-none]="getColumnShow('ARCustomerContactAssistant')">
+                            {{ item.assistant || 'Không có'  }}</td>
+                        <td [class.d-none]="getColumnShow('ARCustomerContactAssistantPhone')">
+                            <span appPhoneNumberCallable *ngIf="item.assistantPhone">{{item.assistantPhone }}</span>
+                            <span *ngIf="!(item.assistantPhone)">Không có</span>
+                        </td>
+                        <td [class.d-none]="getColumnShow('ARCustomerContactJobTitle')">
+                            {{ (item.jobTitle | translate) || 'Không có' }}</td>
+                        <td [class.d-none]="getColumnShow('ARCustomerContactDepartment')">
+                            {{ (item.department | translate) || 'Không có' }}</td>
+                        <td [class.d-none]="getColumnShow('ARCustomerContactPotentialSource')">
+                            {{ item.customerResource || 'Không có'  }}</td>
+                        <td [class.d-none]="getColumnShow('FK_HREmployeeID')" [title]="item.assignTo">
+                            {{ item.assignTo || 'Không có' }}</td>
+                        <td [class.d-none]="getColumnShow('FK_HRGroupID')" [title]="item.assignToGroup">
+                            {{ item.assignToGroup || 'Không có' }}</td>
+                        <td [class.d-none]="getColumnShow('AAUpdatedDate')">
+                            {{ (item.updatedDate | date:'dd/MM/yyyy HH:mm') || 'Không có' }}</td>
+                        <td [class.d-none]="getColumnShow('ARCustomerContactAddress')">{{ item.address || 'Không có' }}
+                        </td>
+                        <td [class.d-none]="getColumnShow('ARCustomerContactInformation')">
+                            {{ item.description || 'Không có' }}</td>
+                        <td class="b-pin-col-sticky-col-right">
+                            <div class="d-flex justify-content-center align-items-center h-100">
+                                <a *ngIf="isEyeVisible() || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" [routerLink]="['/contact/detail', item.id]">
+                                    <i class="fa fa-eye text-warning" aria-hidden="true"></i>
+                                </a>
+                                <a *ngIf="isContactEditContact || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" [routerLink]="['/contact/edit', item.id]" class=" text-success ml-3">
+                                    <i class="fa fa-pencil  cursor-pointer" aria-hidden="true"> </i>
+                                </a>
+                                <a *ngIf="isContactSendEmail || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="text-info ml-3" [href]="item.email ? 'mailto:' + item.email : 'mailto:'">
+                                    <i class="fa fa-envelope-o " aria-hidden="true"></i>
+                                </a>
+                                <a *ngIf="isContactDeleteContact || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" (click)="delete(item.id)" class="text-dark ml-3">
+                                    <i class="fa fa-trash-o cursor-pointer" aria-hidden="true"></i>
+                                </a>
+                                <span *ngIf="!isEyeVisible() && !isContactEditContact && !isContactSendEmail && !isContactDeleteContact && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin">Không có</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="text-center mt-3" *ngIf="(pagedResult.items && pagedResult.items.length == 0) && !loading">Không có dữ liệu
+            </div>
+        </div>
+    </div>
+    <div *ngIf="isContactViewInformation || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="scrollbar-fake" id="wrap2" #wrap2 (scroll)="syncScroll2()">
+        <div class="scrollbar-fake-content" #fakeScrollBar></div>
+    </div>
+    <app-pagination *ngIf="isContactViewInformation || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" [pagedResult]="pagedResult" (pagedResultChange)="pagedResultChange($event)"></app-pagination>
+</div>
+
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.7)" size="medium" color="#fff" type="ball-clip-rotate-multiple"></ngx-spinner>

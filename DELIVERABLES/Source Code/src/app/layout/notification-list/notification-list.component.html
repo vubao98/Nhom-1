@@ -1,0 +1,55 @@
+<div [@routerTransition] class="wrapper">
+  <div class="page-header">
+    <h1 id="timeline">THÔNG BÁO</h1>
+    <hr>
+  </div>
+  <div *ngIf="notificationItems">
+    <ul *ngFor="let item of notificationItems">
+      <li (click)="read(item)" [class.unread]="item.unread" class="cursor-pointer" *ngIf="item.moduleName == 'Campaign' || item.moduleName == 'Event' || item.moduleName == 'Work'">
+        <div>
+          <div class="title">Bạn có 1 {{item.moduleName | translate}} : <strong>{{item.moduleItemName}}</strong></div>
+          <div class="info" *ngIf="item.startDate">{{item.moduleName | translate}} bắt đầu:&nbsp;
+            <strong>{{item.startDate | fromNow}}</strong>
+          </div>
+          <div class="type" *ngIf="item.startDate || item.endDate">Thời gian diễn ra:&nbsp;
+            <strong>{{item.startDate | date: 'dd/MM/yyyy HH:mm'}}</strong>
+            <span *ngIf="item.endDate">đến ngày
+              <strong>{{item.endDate | date: 'dd/MM/yyyy HH:mm'}}</strong>.</span>
+          </div>
+        </div>
+        <span class="number">
+          <span>{{item.startDate | date: 'dd/MM/yyyy HH:mm'}}</span>
+          <span>{{item.endDate | date: 'dd/MM/yyyy HH:mm'}}</span>
+        </span>
+      </li>
+      <li (click)="read(item)" [class.unread]="item.unread" class="cursor-pointer" *ngIf="(item.moduleName != 'Campaign' && item.moduleName != 'Event' && item.moduleName != 'Work')">
+        <div>
+          <div class="title" *ngIf="!item.isLeaderNotification">
+            <!-- Bạn được phân công phụ trách {{item.moduleName | translate}}: <strong>{{item.moduleItemName}}</strong> -->
+            Bạn được phân công phụ trách {{item.moduleName | translate}}
+            <strong>{{item.moduleItemName}}</strong> vào ngày {{item.createdDate | date: 'dd/MM/yyyy'}}
+          </div>
+          <div class="title" *ngIf="item.isLeaderNotification">
+            <!-- Nhóm {{item.employee && item.employee.name}} của bạn được phân công phụ trách {{item.moduleName | translate}}: <strong>{{item.moduleItemName}}</strong> -->
+            Nhóm <strong>{{item?.employeeGroup?.name}}</strong> của bạn được phân công phụ trách {{item.moduleName
+            | translate}} <strong>{{item.moduleItemName}}</strong>
+            vào ngày {{item.createdDate | date: 'dd/MM/yyyy'}}
+          </div>
+          <div class="info" *ngIf="item.startDate">{{item.moduleName | translate}} bắt đầu:&nbsp;
+            <strong>{{item.startDate | fromNow}}</strong>
+          </div>
+          <div class="type" *ngIf="item.createdDate">Thời gian:&nbsp;
+            <strong>{{item.createdDate | date: 'dd/MM/yyyy'}}</strong>
+          </div>
+        </div>
+        <span class="number">
+          <span>{{item.createdDate | date: 'dd/MM/yyyy'}}</span>
+          <span>{{item.endDate | date: 'dd/MM/yyyy HH:mm'}}</span>
+        </span>
+      </li>
+    </ul>
+    <div class="text-center cursor-pointer mt-5" *ngIf="showButton">
+      <a class="text-primary" (click)="onLoadMore()">Xem thêm</a>
+    </div>
+  </div>
+</div>

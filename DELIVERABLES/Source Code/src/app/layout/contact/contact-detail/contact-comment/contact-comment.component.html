@@ -1,0 +1,7 @@
+<div *ngIf="isContactComments || isContactViewComments || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+    <app-comments *ngIf="id" [moduleName]="'contact'" [moduleItemId]="id" [viewMode]="'all'"
+        [addComment]="isContactComments" [viewComment]="isContactViewComments"></app-comments>
+</div>
+<div *ngIf="!isContactComments && !isContactViewComments && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin">
+    <p class="text-center">Bạn không có quyền xem dữ liệu này</p>
+ </div>

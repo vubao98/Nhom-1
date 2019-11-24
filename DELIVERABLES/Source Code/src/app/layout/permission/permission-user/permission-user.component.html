@@ -1,0 +1,63 @@
+<div [@routerTransition]>
+  <div class="search-box d-flex">
+    <div class="media mr-auto media--custom-title">
+      <div class="media-header">
+        <a [routerLink]='["/permission"]'>
+          <i class="fa fa-chevron-left mr-3" aria-hidden="true"></i>
+        </a>
+        <h4 class="d-inline mb-0 text-dark">
+          Phân quyền nhóm {{userGroupName}}
+        </h4>
+      </div>
+    </div>
+    <div class="action-bar">
+      <button *ngIf="isPmsSetPermissionDashboard || isPmsSetPermissionProspect || isPmsSetPermissionCustomer || isPmsSetPermissionContact || isPmsSetPermissionOpportunity || isPmsSetPermissionCampaign || isPmsSetPermissionActivity || isPmsSetPermissionManagerPermission || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="btn btn-primary ml-2" (click)="submitForm()">Lưu &nbsp;
+      </button>
+      <button *ngIf="isPmsSetPermissionDashboard || isPmsSetPermissionProspect || isPmsSetPermissionCustomer || isPmsSetPermissionContact || isPmsSetPermissionOpportunity || isPmsSetPermissionCampaign || isPmsSetPermissionActivity || isPmsSetPermissionManagerPermission || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="btn btn-secondary ml-2" [routerLink]="['/permission']">Hủy &nbsp;
+      </button>
+    </div>
+  </div>
+  <hr>
+  <div class="mt-4" *ngIf="isPmsSetPermissionDashboard || isPmsSetPermissionProspect || isPmsSetPermissionCustomer || isPmsSetPermissionContact || isPmsSetPermissionOpportunity || isPmsSetPermissionCampaign || isPmsSetPermissionActivity || isPmsSetPermissionManagerPermission || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+    <div class="row mx-0 permission-container">
+      <div class="col-md-2 permission-container--menu">
+        <ul class="list-unstyled mt-3">
+          <li routerLink="./home" routerLinkActive="active" *ngIf="isPmsSetPermissionDashboard || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+            <a>Trang chủ</a>
+          </li>
+          <li routerLink="./prospect" routerLinkActive="active" *ngIf="isPmsSetPermissionProspect || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+            <a>Tiềm năng</a>
+          </li>
+          <li routerLink="./customer" routerLinkActive="active" *ngIf="isPmsSetPermissionCustomer || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+            <a>Khách hàng</a>
+          </li>
+          <li routerLink="./contact" routerLinkActive="active" *ngIf="isPmsSetPermissionContact || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+            <a>Liên hệ</a>
+          </li>
+          <li routerLink="./opportunity" routerLinkActive="active" *ngIf="isPmsSetPermissionOpportunity || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+            <a>Cơ hội</a>
+          </li>
+          <li routerLink="./campaign" routerLinkActive="active" *ngIf="isPmsSetPermissionCampaign || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+            <a>Chiến dịch</a>
+          </li>
+          <li routerLink="./activity" routerLinkActive="active" *ngIf="isPmsSetPermissionActivity || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+            <a>Hoạt động</a>
+          </li>
+          <!-- <li routerLink="./statistics" routerLinkActive="active">
+            <a>Báo cáo thống kê</a>
+          </li> -->
+          <li routerLink="./permission" routerLinkActive="active" *ngIf="isPmsSetPermissionManagerPermission || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+            <a>Quản lý phân quyền</a>
+          </li>
+          <!-- <li routerLink="./statistics" routerLinkActive="active">
+            <a>Báo cáo thống kê</a>
+          </li> -->
+        </ul>
+      </div>
+      <div class="col-md">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+  <div class="text-center" *ngIf="!isPmsSetPermissionDashboard && !isPmsSetPermissionProspect && !isPmsSetPermissionCustomer && !isPmsSetPermissionContact && !isPmsSetPermissionOpportunity && !isPmsSetPermissionCampaign && !isPmsSetPermissionActivity && !isPmsSetPermissionManagerPermission && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin">Bạn không có quyền xem dữ liệu này</div>
+</div>

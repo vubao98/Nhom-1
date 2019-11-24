@@ -1,0 +1,6 @@
+<div *ngIf="isOpportunityViewComments || isOpportunityAddComment || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+    <app-comments *ngIf="id" [moduleName]="'opportunity'" [moduleItemId]="id" [viewMode]="'all'" [addComment]="isOpportunityAddComment" [viewComment]="isOpportunityViewComments"></app-comments>
+</div>
+<div *ngIf="!isOpportunityViewComments && !isOpportunityAddComment && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin">
+    <p class="text-center">Bạn không có quyền xem dữ liệu này</p>
+</div>

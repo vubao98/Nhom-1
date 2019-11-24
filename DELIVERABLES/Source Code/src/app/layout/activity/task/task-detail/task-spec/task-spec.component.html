@@ -1,0 +1,87 @@
+<div *ngIf="isActivityViewActivityDetailWork || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+    <div [@routerTransition] *ngIf="task$ | async as task">
+        <div class="card-collapse">
+            <div class="header" (click)="isCollapsedMain = !isCollapsedMain" [attr.aria-expanded]="!isCollapsedMain" aria-controls="info-main">
+                <i class="fa fa-caret-down mr-3"></i>Chi tiết công việc</div>
+            <div class="body" id="info-main" [ngbCollapse]="isCollapsedMain">
+                <table class="w-100 table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Tiêu đề công việc</td>
+                            <td class="w-25">{{task.name}}</td>
+                            <td class="w-25 bg-light text-right label">Trạng thái</td>
+                            <td class="w-25">
+                                <div class="mark-status" [class.status-plan]='task.status=="New"' [class.status-inprogess]='task.status=="Inprogress"' [class.status-not-start]='task.status=="Issued"'
+                                    [class.status-complete]='task.status=="Completed"' [class.status-cancel]='task.status=="Canceled"'
+                                    [class.status-pending]='task.status=="Auditing"'>
+                                    {{ task.status && task.status == 'New' ? 'Sẽ thực hiện' : task.status | translate }}
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Nhóm phụ trách</td>
+                            <td class="w-25">{{task.assignToGroup && task.assignToGroup.name || 'Không có'}}</td>
+                            <td class="w-25 bg-light text-right label">Vị trí</td>
+                            <td class="w-25">{{task.address  || 'Không có'}}</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Người phụ trách</td>
+                            <td class="w-25">{{task.assignTo && task.assignTo.name || 'Không có'}}</td>
+                            
+                            <td class="w-25 bg-light text-right label">Liên quan đến loại</td>
+                            <td class="w-25">{{(task.relatedToType | translate) || 'Không có'}}</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Ngày giờ bắt đầu</td>
+                            <td class="w-25">{{task.startDate | date: 'dd/MM/yyyy HH:mm'}}</td>
+                            
+                            <td class="w-25 bg-light text-right label">Cụ thể liên quan</td>
+                            <td class="w-25 color">
+                                <a (click)="onClick(task.relatedToType ,task.specificRelated.id)" *ngIf="task.specificRelated && task.specificRelated.name">{{task.specificRelated && task.specificRelated.name }}</a>
+                                <span *ngIf="!(task.specificRelated && task.specificRelated.name)">Không có</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Ngày giờ kết thúc</td>
+                            <td class="w-25">{{task.endDate | date: 'dd/MM/yyyy HH:mm'}}</td>
+                            <td class="w-25 bg-light text-right label"><span *ngIf="task.relatedToType == 'Opportunity'">Khách hàng</span></td>
+                            <td class="w-25"><span *ngIf="task.relatedToType == 'Opportunity'">{{selectedSpecificRelated?.extra || 'Không có'}}</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+
+
+
+        <div class="card-collapse">
+            <div class="header" (click)="isCollapsedDesc = !isCollapsedDesc" [attr.aria-expanded]="!isCollapsedDesc" aria-controls="info-desc">
+                <i class="fa fa-caret-down mr-3"></i>Mô tả chi tiết</div>
+            <div class="body" id="info-desc" [ngbCollapse]="isCollapsedDesc">
+                <table class="w-100 table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Mô tả</td>
+                            <td class="w-75">{{task.description || 'Không có'}}</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <app-comments [moduleName]="'work'" [moduleItemId]="task.id" [viewMode]="'partialTask'" [addComment]="isActivityAddCommentWork" [viewComment]="isActivityViewCommentsWork"></app-comments>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <app-audits [moduleName]="'work'" [moduleItemId]="task.id" [viewAudit]="isActivityHistoriesWork"></app-audits>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="!isActivityViewActivityDetailWork && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin">
+    <p class="text-center">Bạn không có quyền xem dữ liệu này</p>
+</div>

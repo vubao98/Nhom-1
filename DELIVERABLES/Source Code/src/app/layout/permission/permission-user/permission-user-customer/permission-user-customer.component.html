@@ -1,0 +1,185 @@
+<div *ngIf="listPermission && listPermission.length > 0">
+  <div class="row mt-3">
+    <div class="col-md-3"><b>Xem khách hàng</b></div>
+    <div class="col-md-2 text-center center-parent">
+      <label class="custom-control custom-checkbox mb-0 pr-3">
+        <input type="checkbox" class="custom-control-input" (click)="viewAllClick($event.target.checked)" [(ngModel)]="viewAll">
+        <span class="custom-control-indicator"></span>
+      </label>
+      Tất cả
+    </div>
+    <div class="col-md-2 text-center text-nowrap center-parent">
+      <label class="custom-control custom-checkbox mb-0 pr-3">
+        <input type="checkbox" class="custom-control-input custom-control-input--disabled" (click)="viewUserClick($event.target.checked)" [disabled]="viewAll" [(ngModel)]="viewByCurrentUser">
+        <span class="custom-control-indicator"></span>
+      </label>
+      Theo người dùng
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-md-3 font-weight-bold">Danh sách khách hàng</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" [checked]="checkAllCustomerList" (click)="toggleCustomerList($event.target.checked)">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Thêm mới khách hàng</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" (click)="clickPermission($event.target.value)" value="CustomerAddCustomer" [checked]="getCheckedPermission('CustomerAddCustomer')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Xem thông tin khách hàng</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" (click)="clickPermission($event.target.value)" value="CustomerViewCustomerInformation" [checked]="getCheckedPermission('CustomerViewCustomerInformation')" #viewCustomerInfo>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Sửa thông tin khách hàng</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" (click)="clickPermission($event.target.value)" value="CustomerEditCustomer" [checked]="getCheckedPermission('CustomerEditCustomer')" #editCustomer>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-double-right ml-3 mr-2" aria-hidden="true"></i>Cấu hình Nhóm</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms || !editCustomer.checked" (click)="clickPermission($event.target.value)" value="CustomerConfigGroup" [checked]="getCheckedPermission('CustomerConfigGroup') && editCustomer.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Gửi email cho khách hàng</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" (click)="clickPermission($event.target.value)" value="CustomerSendEmail" [checked]="getCheckedPermission('CustomerSendEmail')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Xóa khách hàng</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" (click)="clickPermission($event.target.value)" value="CustomerDeleteCustomer" [checked]="getCheckedPermission('CustomerDeleteCustomer')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Nhập file + Tải template</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" (click)="clickPermission($event.target.value)" value="CustomerImportDownloadCustomerTemplate" [checked]="getCheckedPermission('CustomerImportDownloadCustomerTemplate')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Xuất file</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" (click)="clickPermission($event.target.value)" value="CustomerExportFile" [checked]="getCheckedPermission('CustomerExportFile')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-md-3 font-weight-bold">Thông tin khách hàng</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms || !viewCustomerInfo.checked" [checked]="checkAllCustomerInfo && viewCustomerInfo.checked" (click)="toggleCustomerInfo($event.target.checked)">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Sơ lược</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms || !viewCustomerInfo.checked" (click)="clickPermission($event.target.value)" value="CustomerSummary" [checked]="getCheckedPermission('CustomerSummary') && viewCustomerInfo.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Xem chi tiết</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms || !viewCustomerInfo.checked" (click)="clickPermission($event.target.value)" value="CustomerViewDetail" [checked]="getCheckedPermission('CustomerViewDetail') && viewCustomerInfo.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Xem bình luận</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms || !viewCustomerInfo.checked" (click)="clickPermission($event.target.value)" value="CustomerViewComments" [checked]="getCheckedPermission('CustomerViewComments') && viewCustomerInfo.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Đăng bình luận</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms || !viewCustomerInfo.checked" (click)="clickPermission($event.target.value)" value="CustomerAddComment" [checked]="getCheckedPermission('CustomerAddComment') && viewCustomerInfo.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Các hoạt động</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms || !viewCustomerInfo.checked" (click)="clickPermission($event.target.value)" value="CustomerActivities" [checked]="getCheckedPermission('CustomerActivities') && viewCustomerInfo.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Các cập nhật</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms || !viewCustomerInfo.checked" (click)="clickPermission($event.target.value)" value="CustomerHistories" [checked]="getCheckedPermission('CustomerHistories') && viewCustomerInfo.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Các cơ hội</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms || !viewCustomerInfo.checked" (click)="clickPermission($event.target.value)" value="CustomerOpportunities" [checked]="getCheckedPermission('CustomerOpportunities') && viewCustomerInfo.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="my-4 text-center">
+    <button class="btn btn-secondary ml-2" routerLink="../prospect">
+      <i class="fa fa-angle-left mx-2" aria-hidden="true"></i> Trở về
+    </button>
+    <button class="btn btn-primary ml-2" routerLink="../contact">
+      Tiếp <i class="fa fa-angle-right mx-2" aria-hidden="true"></i>
+    </button>
+  </div>
+</div>

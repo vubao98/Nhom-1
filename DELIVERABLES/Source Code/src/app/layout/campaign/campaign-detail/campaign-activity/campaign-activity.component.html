@@ -1,0 +1,6 @@
+<div *ngIf="isCampaignActivities || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="pr-3">
+  <app-activity-table [moduleName]="'campaign'" [moduleItemId]="id" [moduleItemName]="name"></app-activity-table>
+</div>
+<div *ngIf="!isCampaignActivities && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin">
+  <p class="text-center">Bạn không có quyền xem dữ liệu này</p>
+</div>

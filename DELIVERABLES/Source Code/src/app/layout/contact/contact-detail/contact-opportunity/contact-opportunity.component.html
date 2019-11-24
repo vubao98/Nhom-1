@@ -1,0 +1,10 @@
+<div *ngIf="isContactOpportunities || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+  <div *ngIf="name" class="pr-3">
+    <app-opportunity-table [moduleName]="'contact'" [moduleItemId]="id" [moduleItemName]="name"
+      [moduleItemLastName]="lastName" [moduleItemFirstName]="firstName">
+    </app-opportunity-table>
+  </div>
+</div>
+<div *ngIf="!isContactOpportunities && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin">
+  <p class="text-center">Bạn không có quyền xem dữ liệu này</p>
+</div>

@@ -1,0 +1,13 @@
+:host() {
+    width: 80vw;
+}
+
+.email-err {
+    font-size: 0.9em;
+    color: red;
+    margin-top: -.8rem;
+}
+
+button:disabled, button[disabled] {
+    cursor: not-allowed
+}

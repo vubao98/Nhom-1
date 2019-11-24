@@ -1,0 +1,38 @@
+<nav class="navbar navbar-expand-lg fixed-top">
+    <nav class="navbar-brand-logo">
+        <a class="" [routerLink]="['/dashboard']">
+            <img src="assets/images/logo.png" class="img-logo" alt=""><span class="text-white ml-3"></span>
+        </a>
+    </nav>
+    <!-- <a class="navbar-brand" href="/dashboard">BYS CRM</a> -->
+    <button class="navbar-toggler" type="button" (click)="toggleSidebar()">
+        <i class="fa fa-bars text-muted" aria-hidden="true"></i>
+    </button>
+
+    <div class="collapse navbar-collapse">
+
+        <app-header-menu></app-header-menu>
+        
+        <div *ngIf="isPmsViewCustomerInfo || isProspectViewProspectInfo || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="search-bar" [style.width]="'calc(100% - 220px - ' + userMenu.clientWidth + 'px)'" [@toggleSearchContainer]="toggleSearch ? 'open' : 'close'">
+            <i class="fa fa-search ic-search" aria-hidden="true"></i>
+            <p-autoComplete inputId="search-bar-ip" scrollHeight="800px" [(ngModel)]="searchStr" field="name" [suggestions]="searchResult" emptyMessage="Không có dữ liệu" [placeholder]="placeHolderSearchText"
+                (completeMethod)="search($event.query)" (onSelect)="selectSearch($event)"
+                >
+                <ng-template let-customer pTemplate="item">
+                    <div class="ui-helper-clearfix">
+                        <div>{{customer.type == 'Customer' ? 'Khách hàng | ' : 'Tiềm năng | '}}{{customer.name}}</div>
+                        <div>{{customer.phone}} {{customer.email ? '-' : ''}} {{customer.email}}</div>
+                    </div>
+                </ng-template>
+            </p-autoComplete>
+        </div>
+
+        <ul class="navbar-nav ml-auto" #userMenu>
+            <i class="fa fa-search ic-search pointer" *ngIf="!toggleSearch && (isPmsViewCustomerInfo || isProspectViewProspectInfo || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin)" (click)="openSearchBar()" aria-hidden="true"></i>
+            <i class="fa fa-times ic-search pointer" *ngIf="toggleSearch" (click)="closeSearchBar()" aria-hidden="true"></i>
+            <app-header-notification></app-header-notification>
+            <app-header-user-menu></app-header-user-menu>
+        </ul>
+
+    </div>
+</nav>

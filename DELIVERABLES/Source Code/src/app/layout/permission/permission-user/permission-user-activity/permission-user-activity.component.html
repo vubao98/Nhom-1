@@ -1,0 +1,265 @@
+<div *ngIf="listPermission && listPermission.length > 0">
+  <div class="row mt-3">
+    <div class="col-md-3"><b>Xem sự kiện</b></div>
+    <div class="col-md-2 text-center center-parent">
+      <label class="custom-control custom-checkbox mb-0 pr-3">
+        <input type="checkbox" class="custom-control-input" (click)="viewAllEventClick($event.target.checked)" [(ngModel)]="viewAllEvent">
+        <span class="custom-control-indicator"></span>
+      </label>
+      Tất cả
+    </div>
+    <div class="col-md-2 text-center text-nowrap center-parent">
+      <label class="custom-control custom-checkbox mb-0 pr-3">
+        <input type="checkbox" class="custom-control-input custom-control-input--disabled" (click)="viewUserEventClick($event.target.checked)"  [disabled]="viewAllEvent" [(ngModel)]="viewEventByCurrentUser">
+        <span class="custom-control-indicator"></span>
+      </label>
+      Theo người dùng
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><b>Xem công việc</b></div>
+    <div class="col-md-2 text-center center-parent">
+      <label class="custom-control custom-checkbox mb-0 pr-3">
+        <input type="checkbox" class="custom-control-input" (click)="viewAllActivityClick($event.target.checked)" [(ngModel)]="viewAllActivity">
+        <span class="custom-control-indicator"></span>
+      </label>
+      Tất cả
+    </div>
+    <div class="col-md-2 text-center  text-nowrap center-parent">
+      <label class="custom-control custom-checkbox mb-0 pr-3">
+        <input type="checkbox" class="custom-control-input custom-control-input--disabled" (click)="viewUserActivityClick($event.target.checked)" [disabled]="viewAllActivity" [(ngModel)]="viewActivityByCurrentUser">
+        <span class="custom-control-indicator"></span>
+      </label>
+      Theo người dùng
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-md-3"></div>
+    <div class="col-md-1 text-center font-weight-bold text-nowrap">Sự kiện</div>
+    <div class="col-md-1 text-center font-weight-bold text-nowrap">Công việc</div>
+  </div>
+  <div class="row">
+    <div class="col-md-3 font-weight-bold">Danh sách sự kiện/công việc</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [checked]="checkAllEventList" [disabled]="disabledPmsEvent" (click)="toggleProspectList($event.target.checked, 'Event')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [checked]="checkAllActivityList" [disabled]="disabledPmsActivity" (click)="toggleProspectList($event.target.checked, 'Work')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Thêm mới</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" value="ActivityAddActivity" [disabled]="disabledPmsEvent" (click)="clickPermission($event.target.value, 'Event')" [checked]="getCheckedPermission('ActivityAddActivity', 'Event')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" value="ActivityAddActivity" [disabled]="disabledPmsActivity" (click)="clickPermission($event.target.value, 'Work')" [checked]="getCheckedPermission('ActivityAddActivity', 'Work')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Xem thông tin</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" value="ActivityViewInformation" [disabled]="disabledPmsEvent" (click)="clickPermission($event.target.value, 'Event')" [checked]="getCheckedPermission('ActivityViewInformation', 'Event')" #viewInfoEvent>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" value="ActivityViewInformation" [disabled]="disabledPmsActivity" (click)="clickPermission($event.target.value, 'Work')" [checked]="getCheckedPermission('ActivityViewInformation', 'Work')" #viewInfoActivity>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Sửa</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" value="ActivityEditActivity" [disabled]="disabledPmsEvent" (click)="clickPermission($event.target.value, 'Event')" [checked]="getCheckedPermission('ActivityEditActivity', 'Event')" #editActivityEvent>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" value="ActivityEditActivity" [disabled]="disabledPmsActivity" (click)="clickPermission($event.target.value, 'Work')" [checked]="getCheckedPermission('ActivityEditActivity', 'Work')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-double-right ml-3 mr-2" aria-hidden="true"></i>Cấu hình Loại sự kiện</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" value="ActivityConfigEventType" [disabled]="disabledPmsEvent || !editActivityEvent.checked" (click)="clickPermission($event.target.value, 'Event')" [checked]="getCheckedPermission('ActivityConfigEventType', 'Event') && editActivityEvent.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <!-- <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" value="ActivityEditActivity" [disabled]="disabledPmsActivity" (click)="clickPermission($event.target.value, 'Work')" [checked]="getCheckedPermission('ActivityEditActivity', 'Work')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div> -->
+  </div>
+
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Xóa</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" value="ActivityDeleteActivity" [disabled]="disabledPmsEvent" (click)="clickPermission($event.target.value, 'Event')" [checked]="getCheckedPermission('ActivityDeleteActivity', 'Event')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" value="ActivityDeleteActivity" [disabled]="disabledPmsActivity" (click)="clickPermission($event.target.value, 'Work')" [checked]="getCheckedPermission('ActivityDeleteActivity', 'Work')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Nhập file + Tải template</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" value="ActivityImportDownloadActivityTemplate" [disabled]="disabledPmsEvent" (click)="clickPermission($event.target.value, 'Event')" [checked]="getCheckedPermission('ActivityImportDownloadActivityTemplate', 'Event')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" value="ActivityImportDownloadActivityTemplate" [disabled]="disabledPmsActivity" (click)="clickPermission($event.target.value, 'Work')" [checked]="getCheckedPermission('ActivityImportDownloadActivityTemplate', 'Work')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Xuất file</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" value="ActivityExportFile" [disabled]="disabledPmsEvent" (click)="clickPermission($event.target.value, 'Event')" [checked]="getCheckedPermission('ActivityExportFile', 'Event')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" value="ActivityExportFile" [disabled]="disabledPmsActivity" (click)="clickPermission($event.target.value, 'Work')" [checked]="getCheckedPermission('ActivityExportFile', 'Work')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <!-- No use -->
+  <!-- <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Nhập file + Tải template</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" value="ActivityImportDownloadActivityTemplate" [disabled]="disabledPmsEvent" (click)="clickPermission($event.target.value, 'Event')" [checked]="getCheckedPermission('ActivityImportDownloadActivityTemplate', 'Event')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" value="ActivityImportDownloadActivityTemplate" [disabled]="disabledPmsActivity" (click)="clickPermission($event.target.value, 'Work')" [checked]="getCheckedPermission('ActivityImportDownloadActivityTemplate', 'Work')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div> -->
+
+  <div class="row mt-2">
+    <div class="col-md-3 font-weight-bold">Thông tin sự kiện/công việc</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPmsEvent || !viewInfoEvent.checked" [checked]="checkAllEventInfo" (click)="toggleProspectInfo($event.target.checked, 'Event')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPmsActivity || !viewInfoActivity.checked" [checked]="checkAllActivityInfo" (click)="toggleProspectInfo($event.target.checked, 'Work')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Xem chi tiết</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPmsEvent || !viewInfoEvent.checked" value="ActivityViewActivityDetail"  (click)="clickPermission($event.target.value, 'Event')" [checked]="getCheckedPermission('ActivityViewActivityDetail', 'Event') && viewInfoEvent.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPmsActivity || !viewInfoActivity.checked" value="ActivityViewActivityDetail" (click)="clickPermission($event.target.value, 'Work')" [checked]="getCheckedPermission('ActivityViewActivityDetail', 'Work')  && viewInfoActivity.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Xem bình luận</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPmsEvent || !viewInfoEvent.checked" value="ActivityViewComments" (click)="clickPermission($event.target.value, 'Event')" [checked]="getCheckedPermission('ActivityViewComments', 'Event') && viewInfoEvent.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPmsActivity || !viewInfoActivity.checked" value="ActivityViewComments" (click)="clickPermission($event.target.value, 'Work')" [checked]="getCheckedPermission('ActivityViewComments', 'Work')  && viewInfoActivity.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Đăng bình luận</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPmsEvent || !viewInfoEvent.checked" value="ActivityAddComment" (click)="clickPermission($event.target.value, 'Event')" [checked]="getCheckedPermission('ActivityAddComment', 'Event') && viewInfoEvent.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPmsActivity || !viewInfoActivity.checked" value="ActivityAddComment" (click)="clickPermission($event.target.value, 'Work')" [checked]="getCheckedPermission('ActivityAddComment', 'Work')  && viewInfoActivity.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Các cập nhật</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPmsEvent || !viewInfoEvent.checked" value="ActivityHistories" (click)="clickPermission($event.target.value, 'Event')" [checked]="getCheckedPermission('ActivityHistories', 'Event') && viewInfoEvent.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPmsActivity || !viewInfoActivity.checked" value="ActivityHistories" (click)="clickPermission($event.target.value, 'Work')" [checked]="getCheckedPermission('ActivityHistories', 'Work') && viewInfoActivity.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="my-4 text-center">
+    <button class="btn btn-secondary ml-2" routerLink="../campaign">
+      <i class="fa fa-angle-left mx-2" aria-hidden="true"></i> Trở về
+    </button>
+    <button class="btn btn-primary ml-2" routerLink="../permission">
+      Tiếp <i class="fa fa-angle-right mx-2" aria-hidden="true"></i>
+    </button>
+  </div>
+</div>

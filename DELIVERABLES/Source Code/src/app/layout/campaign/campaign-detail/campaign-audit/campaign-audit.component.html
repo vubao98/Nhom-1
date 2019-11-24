@@ -1,0 +1,6 @@
+<div *ngIf="isCampaignHistories || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="pr-3">
+  <app-audits-list *ngIf="id" [moduleName]="'campaign'" [moduleItemId]="id" ></app-audits-list>
+</div>
+<div *ngIf="!isCampaignHistories && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin">
+  <p class="text-center">Bạn không có quyền xem dữ liệu này</p>
+</div>

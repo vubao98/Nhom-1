@@ -1,0 +1,69 @@
+:host /deep/ {
+    .ui-autocomplete-multiple-container {
+        max-width: 100% !important;
+    }
+    @media screen and (min-width: 1500px) and (max-width: 1536px) {
+        .ui-corner-all{
+            max-width: 10rem;
+        }
+        .ui-autocomplete-token-label{       
+            white-space: nowrap; 
+            overflow: hidden;
+            text-overflow: ellipsis; 
+        }
+        .customer{
+            max-width: 84.5%;
+        }
+    }
+    @media screen and (min-width: 1420px) and (max-width: 1499px) {
+        .ui-corner-all{
+            max-width: 9rem;
+        }
+        .ui-autocomplete-token-label{       
+            white-space: nowrap; 
+            overflow: hidden;
+            text-overflow: ellipsis; 
+        }
+        .customer{
+            max-width: 83.5%;
+        }
+    }
+    @media screen and (min-width: 1366px) and (max-width: 1419px) {
+        .ui-corner-all{
+            max-width: 8rem;
+        }
+        .ui-autocomplete-token-label{       
+            white-space: nowrap; 
+            overflow: hidden;
+            text-overflow: ellipsis; 
+        }
+        .customer{
+            max-width: 82%;
+        }
+    }
+    @media screen and (max-width: 1365px) {
+        .ui-corner-all{
+            max-width: 7rem;
+        }
+        .ui-autocomplete-token-label{       
+            white-space: nowrap; 
+            overflow: hidden;
+            text-overflow: ellipsis; 
+        }
+    }
+  
+}
+
+.abc{
+    height: auto !important;
+}
+.margin-left-star-form{
+    margin-left: -0.3rem;
+ }
+
+ .ic-pencil {
+    font-size: 2rem;
+    position: absolute;
+    padding-left: .5rem;
+    color: #17a2b8;
+}

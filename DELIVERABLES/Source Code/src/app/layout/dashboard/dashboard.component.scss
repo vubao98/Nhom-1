@@ -1,0 +1,62 @@
+:host /deep/ {
+    .owl-dateTime-dialog {
+        width: 15rem !important;
+    }
+}
+
+.list-group-item{
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    &:last-child{
+        border-bottom: none;
+    }
+}
+
+.header{
+    label{
+        cursor: default !important;
+
+    }
+}
+
+.list-group-item{
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    &:last-child{
+        border-bottom: none;
+    }
+}
+
+.header{
+    label{
+        cursor: default !important;
+
+    }
+}
+.draw{
+    border-left: 0.4rem solid #17a2b8;
+    padding: 0.2rem;
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+    margin-right: 0.5rem;
+    // background-color: #17a2b8;
+    display: inline-block
+
+
+
+}
+.width-text{
+    width:50.5% !important;
+}
+.hyperlink {
+    color: #19a3b9 !important;
+    cursor: pointer;
+ }

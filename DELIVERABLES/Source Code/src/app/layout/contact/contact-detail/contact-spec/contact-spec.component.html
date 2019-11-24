@@ -1,0 +1,209 @@
+<div *ngIf="isContactViewContactDetail || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+    <div [@routerTransition] *ngIf="contact$ | async as contact">
+        <div class="card-collapse">
+            <div class="header" (click)="isCollapsedMain = !isCollapsedMain" [attr.aria-expanded]="!isCollapsedMain"
+                aria-controls="info-main">
+                <i class="fa fa-caret-down mr-3"></i>Chi tiết liên hệ</div>
+            <div class="body" id="info-main" [ngbCollapse]="isCollapsedMain">
+                <table class="w-100 table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Mã liên hệ</td>
+                            <td class="w-25">{{contact.contactNumber}}</td>
+                            <td class="w-25 bg-light text-right label">Điện thoại phòng</td>
+                            <td class="w-25">
+                                <span appPhoneNumberCallable
+                                    *ngIf="contact.companyPhone">{{contact.companyPhone}}</span>
+                                <span *ngIf="!contact.companyPhone">Không có</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Danh xưng</td>
+                            <td class="w-25">{{(contact.salutation | translate) || 'Không có' }}</td>
+                            <td class="w-25 bg-light text-right label">Điện thoại di động</td>
+                            <td class="w-25">
+                                <span appPhoneNumberCallable *ngIf="contact.mobilePhone">{{contact.mobilePhone}}</span>
+                                <span *ngIf="!contact.mobilePhone">Không có</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Họ và tên</td>
+                            <td class="w-25">{{contact.name || 'Không có' }}</td>
+                            <td class="w-25 bg-light text-right label">Điện thoại nhà riêng</td>
+                            <td class="w-25">
+                                <span appPhoneNumberCallable *ngIf="contact.homePhone">{{contact.homePhone}}</span>
+                                <span *ngIf="!contact.homePhone">Không có</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Ngày sinh</td>
+                            <td class="w-25">{{(contact.dateOfBirth | date: 'dd/MM/yyyy') || 'Không có' }}</td>
+                            <td class="w-25 bg-light text-right label">Điện thoại phụ</td>
+                            <td class="w-25">
+                                <span appPhoneNumberCallable *ngIf="contact.extraPhone">{{contact.extraPhone}}</span>
+                                <span *ngIf="!contact.extraPhone">Không có</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Khách hàng</td>
+                            <td class="w-25 color">
+                                <a *ngFor="let customer of contact.customer" (click)="goToDeitalCustomer(customer.id)">
+                                    <p>{{customer.text}}</p>
+                                </a>
+                                <span *ngIf="contact.customer && contact.customer.length == 0">Không có</span>
+                            </td>
+                            <td class="w-25 bg-light text-right label">Điện thoại trợ lý</td>
+                            <td class="w-25">
+                                <span appPhoneNumberCallable
+                                    *ngIf="contact.assistantPhone">{{contact.assistantPhone}}</span>
+                                <span *ngIf="!contact.assistantPhone">Không có</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Trợ lý</td>
+                            <td class="w-25">{{contact.assistant || 'Không có' }}</td>
+                            <td class="w-25 bg-light text-right label">Email</td>
+                            <td class="w-25">
+                                <a *ngIf="contact.email" [href]="'mailto:' + contact.email">{{contact.email}}</a>
+                                <span *ngIf="!contact.email">{{'Không có'}}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Chức danh</td>
+                            <td class="w-25">{{contact.jobTitle || 'Không có' }}</td>
+                            <td class="w-25 bg-light text-right label">Nguồn tiềm năng</td>
+                            <td class="w-25">{{(contact.prospectSource?.name | translate) || 'Không có' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Phòng ban</td>
+                            <td class="w-25">{{contact.department || 'Không có' }}</td>
+                            <td class="w-25 bg-light text-right label">
+                                <span>Nhóm phụ
+                                    trách</span>
+                            </td>
+                            <td class="w-25">{{contact.assignToGroup && contact.assignToGroup.name || 'Không có'}}</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Được chuyển đổi từ tiềm năng</td>
+                            <td class="w-25">
+                                <a *ngIf="contact.prospect" class="hyperlink"
+                                    (click)="goToProspect(contact.prospect.id)">{{contact.prospect
+                                ? contact.prospect.fullName : ''}}</a>
+                                <span *ngIf="!contact.prospect">Không</span>
+                            </td>
+                            <td class="w-25 bg-light text-right label">
+                                <span>Người phụ trách</span>
+                            </td>
+                            <td class="w-25">{{contact.assignTo && contact.assignTo.name || 'Không có'}}</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Thời gian tạo </td>
+                            <td class="w-25">{{(contact.createdDate| date: 'dd/MM/yyyy HH:mm') || 'Không có' }}</td>
+                            <td class="w-25 bg-light text-right label">
+                                <span *ngIf="contact.createdDate != contact.updatedDate">Thời gian sửa đổi</span>
+                            </td>
+                            <td class="w-25">
+                                <span
+                                    *ngIf="contact.createdDate != contact.updatedDate">{{(contact.updatedDate | date: 'dd/MM/yyyy HH:mm') || 'Không có' }}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-collapse">
+            <div class="header" (click)="isCollapsedAddress = !isCollapsedAddress"
+                [attr.aria-expanded]="!isCollapsedAddress" aria-controls="info-address">
+                <i class="fa fa-caret-down mr-3"></i>Chi tiết địa chỉ</div>
+            <div class="body" id="info-address" [ngbCollapse]="isCollapsedAddress">
+                <table class="w-100 table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Địa chỉ</td>
+                            <td class="w-25">{{contact.address || 'Không có' }}</td>
+                            <td class="w-25 bg-light text-right label">Địa chỉ khác</td>
+                            <td class="w-25">{{contact.otherAddress || 'Không có' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Quốc gia</td>
+                            <td class="w-25">{{getLocation(contact.location, 'Country') || 'Không có'}}</td>
+                            <td class="w-25 bg-light text-right label">Quốc gia khác</td>
+                            <td class="w-25">{{getLocation(contact.locationOther, 'Country') || 'Không có'}}</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Tỉnh/Thành phố</td>
+                            <td class="w-25">{{getLocation(contact.location, 'StateProvince') || 'Không có'}}</td>
+                            <td class="w-25 bg-light text-right label">Tỉnh/Thành phố khác</td>
+                            <td class="w-25">{{getLocation(contact.locationOther, 'StateProvince') || 'Không có'}}</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Quận/huyện</td>
+                            <td class="w-25">{{getLocation(contact.location, 'District') || 'Không có'}}</td>
+                            <td class="w-25 bg-light text-right label">Quận/huyện khác</td>
+                            <td class="w-25">{{getLocation(contact.locationOther, 'District') || 'Không có'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-collapse">
+            <div class="header" (click)="isCollapsedPic = !isCollapsedPic" [attr.aria-expanded]="!isCollapsedPic"
+                aria-controls="info-desc">
+                <i class="fa fa-caret-down mr-3"></i>Mô tả chi tiết</div>
+            <div class="body" id="info-desc" [ngbCollapse]="isCollapsedPic">
+                <table class="w-100 table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Mô tả</td>
+                            <td class="w-75">{{contact.description || 'Không có' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-collapse">
+            <div class="header" (click)="isCollapsedDesc = !isCollapsedDesc" [attr.aria-expanded]="!isCollapsedDesc"
+                aria-controls="info-desc">
+                <i class="fa fa-caret-down mr-3"></i>Hình ảnh</div>
+            <div class="body" id="info-desc" [ngbCollapse]="isCollapsedDesc">
+                <table class="w-100 table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Hình ảnh liên hệ</td>
+                            <td class="w-75">
+                                <img [src]="contact.image? contact.image : avatarSrc" width="120" height="120">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-collapse">
+            <div class="header" (click)="isCollapseCardVisit = !isCollapseCardVisit"
+                [attr.aria-expanded]="!isCollapseCardVisit" aria-controls="info-desc">
+                <i class="fa fa-caret-down mr-3"></i>Card visit</div>
+            <div class="body" id="info-desc" [ngbCollapse]="isCollapseCardVisit">
+                <table class="w-100 table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td class="w-25 bg-light text-right label"></td>
+                            <td class="w-75">
+                                <!-- <img [src]="contact.image? contact.image : avatarSrc" width="120" height="120"> -->
+                                <img [src]="contact.cardVisit ? contact.cardVisit : cardVisitSrc" width="120">
+                                <div class="text-visit-card-size"><i>* Tỷ lệ ảnh khuyến khích: 54x90mm, 255x155
+                                        pixel</i></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="!isContactViewContactDetail && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin">
+    <p class="text-center">Bạn không có quyền xem dữ liệu này</p>
+</div>

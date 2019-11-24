@@ -1,0 +1,16 @@
+<app-header></app-header>
+<app-sidebar (emitPhoneCall)="receive($event)" (emitPhoneStatus)="receive2($event)" (listPhoneCall)="receiveListPhone($event)"></app-sidebar>
+<app-menu></app-menu>
+<section class="main-container" [ngStyle]="{'min-height': clientHeight + 'px'}">
+    <router-outlet></router-outlet>
+</section>
+<app-footer></app-footer>
+<div kendoDialogContainer></div>
+
+<!-- <app-call-center [phoneNumberCall]="sdt" [statusCall]="status" [listPhoneNumberCall]="listSdt">
+
+</app-call-center>
+
+<app-call-center-history>
+
+</app-call-center-history> -->

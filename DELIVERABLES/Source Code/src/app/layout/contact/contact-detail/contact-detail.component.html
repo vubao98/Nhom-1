@@ -1,0 +1,62 @@
+<div *ngIf="contact$ | async as contact">
+    <div class="search-box d-flex">
+
+        <div class="media mr-auto">
+            <div class="media-header">
+                <a [routerLink]='["/contact"]'>
+                    <i class="fa fa-chevron-left mr-3" aria-hidden="true"></i>
+                </a>
+                <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+            </div>
+
+            <div class="media-body ml-3">
+                <p class="last">
+                    <strong>{{(contact.salutation | translate) + ' ' + contact.name}}</strong>
+                </p>
+                <span *ngIf="contact.customer" class="small text-muted">Khách hàng -
+                    <a *ngFor="let customer of contact.customer; let i = index" [routerLink]="['/customer/detail',customer.id ]">
+                        {{customer.text}}
+                        <span *ngIf="contact.customer.length > 1 && i != (contact.customer.length - 1)">, </span>
+                    </a>
+                </span>
+            </div>
+
+        </div>
+
+        <div class="action-bar">
+            <a *ngIf="isContactEditContact || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="btn btn-primary ml-2" [routerLink]="['/contact/edit', contact.id]">Sửa &nbsp;
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+            </a>
+            <a *ngIf="isContactSendEmail || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="btn btn-primary ml-2" [href]="contact.email ? 'mailto:' + contact.email : 'mailto:'">Gửi email &nbsp;
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+            </a>
+            <button *ngIf="isContactDeleteContact || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="btn btn-primary ml-2" (click)="delete(contact.id)">Xóa &nbsp;
+                <i class="fa fa-trash" aria-hidden="true"></i>
+            </button>
+            <button class="btn btn-primary ml-2" (click)="refresh(contact.id)">
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+            </button>
+        </div>
+
+    </div>
+    <hr>
+
+    <div class="row no-gutters">
+        <div class="col-md-10 pr-3">
+            <router-outlet></router-outlet>
+        </div>
+
+        <div class="col-md-2">
+            <app-contact-menu></app-contact-menu>
+        </div>
+    </div>
+
+</div>
+
+<div *ngIf="isNotExist">
+    <div class="text-center">
+        <div class="alert alert-warning text-center" role="alert">
+            Liên hệ không tồn tại hoặc đã bị xóa !
+        </div>
+    </div>
+</div>

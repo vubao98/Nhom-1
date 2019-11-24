@@ -1,0 +1,39 @@
+<div>
+    <form #emailForm="ngForm" novalidate>
+        <div class="input-group">
+            <span style="min-width: 82px" class="input-group-addon title-mail border-title-mail width-for-to">Gửi tới:</span>
+            <div style="height: 40px;" class="form-control border-left-input">
+                <tag-input [(ngModel)]="emailToList" theme='minimal' [ngModelOptions]="{standalone: true}" [disable]="true" [placeholder]="''"></tag-input>
+
+            </div>
+            <!-- <input id="msg" type="text" class="form-control border-left-input" name="msg" placeholder="nghia.nguyen@bys.vn"> -->
+        </div>
+        <div></div>
+        <br>
+        <div class="input-group form-group">
+            <span style="min-width: 82px" class="input-group-addon title-mail border-title-mail">Tiêu đề:</span>
+            <input required [(ngModel)]="emailModel.title" #emailTitle="ngModel" [ngModelOptions]="{standalone: true}" style="height: 40px;" class="form-control border-left-input"
+                name="msg">
+        </div>
+        <div class="form-group email-err" *ngIf="emailTitle.errors && emailTitle.errors.required && (emailTitle.dirty || emailTitle.touched)">Trường này là bắt buộc nhập</div>
+        <div class="form-group email-err" *ngIf="emailModel.title && emailModel.title.length > 50">Tiêu đề không được nhiều hơn 50 ký tự</div>
+        <!-- <div class="form-group">
+            <ckeditor [(ngModel)]="emailModel.content" #myckeditor [ngModelOptions]="{standalone: true}" [config]="ckeConfig" debounce="500"
+                (change)="onChange($event)"></ckeditor>
+        </div> -->
+        <div class="input-group form-group">
+            <span style="min-width: 82px" class="input-group-addon title-mail border-title-mail">Nội dung:</span>
+            <textarea required rows="4" [(ngModel)]="emailModel.content" #emailContent="ngModel" [ngModelOptions]="{standalone: true}" class="form-control border-left-input"
+                name="msg"></textarea>
+        </div>
+        <div class="form-group email-err" *ngIf="emailContent.errors && emailContent.errors.required && (emailContent.dirty || emailContent.touched)">Trường này là bắt buộc nhập</div>
+        <div class="form-group email-err" *ngIf="emailModel.content && emailModel.content.length > 250">Nội dung không được nhiều hơn 250 ký tự</div>
+        <div class="text-right">
+            <button class="btn btn-primary" [disabled]="(emailTitle.errors || emailContent.errors) || (emailModel.title && emailModel.title.length > 50) || (emailModel.content && emailModel.content.length > 250)" (click)="sendClick()">Gửi</button>
+        </div>
+    </form>
+    <!-- <div>
+        <span class="k-icon k-i-loading" style="color: #fff"></span>
+    </div> -->
+</div>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.7)" size="medium" color="#fff" type="ball-clip-rotate-multiple"></ngx-spinner>

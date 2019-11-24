@@ -1,0 +1,87 @@
+.item-selector-grid {
+    display: grid;
+    grid-template-columns: 1fr 50px 1fr;
+}
+
+.list-customer-grid {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+}
+
+.list-customer-grid-4 {
+    display: grid;
+    grid-template-columns: 7rem 1fr 3rem 1fr;
+}
+
+.group-btn-filter {
+    margin-left: -.5rem;
+    margin-top: 1.2rem;
+}
+
+.table-customer-related {
+    table-layout: fixed;
+    .col-cb {
+        width: 40px;
+    }
+
+    .col-idx {
+        width: 50px;
+    }
+}
+
+.group-btn-center-midle {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.text-linethrough {
+    text-decoration: line-through;
+}
+
+:host /deep/ {
+    .custom-checkbox {
+        margin-left: 1.5rem;
+        margin-bottom: 0;
+    }
+
+    .ui-autocomplete {
+        width: 100% !important;
+        .custom-autocomplete {
+            width: calc(100% - 2.2rem);
+            border-right: none;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            height: 2.1rem;
+        }
+    }
+
+    .ui-autocomplete-dropdown {
+        width: 2.2rem !important;
+        height: 2.1rem !important;
+        background-color: #17a2b8 !important;
+        border: #17a2b8 !important;
+
+        &:hover {
+            background-color: #17a2b8 !important;
+            border: #17a2b8 !important;
+        }
+
+        .ui-button-icon-left {
+            margin-top: -.4em !important;
+        }
+
+        .fa-caret-down:before {
+            content: none !important;
+        }
+    }
+
+    .ui-autocomplete-loader {
+        margin-right: .5rem;
+    }
+}
