@@ -1,0 +1,52 @@
+<div *ngIf="customer$ | async as customer">
+    <div class="search-box d-flex">
+
+        <div class="media mr-auto">
+            <div class="media-header">
+                <a [routerLink]='["/customer"]' [queryParams]="isBirthDay ? {hasUpcomingBirthday: true} : {}">
+                    <i class="fa fa-chevron-left mr-3" aria-hidden="true"></i>
+                </a>
+                <i class="fa fa-building" aria-hidden="true"></i>
+                <span class="ml-3 text-dark small">{{customer.name}}</span>
+            </div>
+
+        </div>
+
+        <div class="action-bar">
+            <a *ngIf="isPmsEditCustomer || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="btn btn-primary ml-2" [routerLink]="['/customer/edit', customer.id]">Sửa &nbsp;
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+            </a>
+            <a *ngIf="isPmsSendEmailCustomer || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="btn btn-primary ml-2" [href]="customer.email ? 'mailto:' + customer.email : customer.emailExtra ? 'mailto:' + customer.emailExtra : 'mailto:'">Gửi
+                email &nbsp;
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+            </a>
+            <button *ngIf="isPmsDeleteCustomer || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="btn btn-primary ml-2" (click)="delete(customer.id)">Xóa &nbsp;
+                <i class="fa fa-trash" aria-hidden="true"></i>
+            </button>
+            <button class="btn btn-primary ml-2" (click)="refresh(customer.id)">
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+            </button>
+        </div>
+
+    </div>
+    <hr>
+
+    <div class="row no-gutters">
+        <div class="col-md-10 pr-3">
+            <router-outlet></router-outlet>
+        </div>
+
+        <div class="col-md-2">
+            <app-customer-menu></app-customer-menu>
+        </div>
+    </div>
+
+</div>
+
+<div *ngIf="isNotExist">
+    <div class="text-center">
+        <div class="alert alert-warning text-center" role="alert">
+            Khách hàng không tồn tại hoặc đã bị xóa !
+        </div>
+    </div>
+</div>

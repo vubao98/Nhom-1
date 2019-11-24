@@ -1,0 +1,26 @@
+<ul class="navbar-nav nav-menu-bar">
+  <li class="nav-item ">
+      <a class="nav-link" [routerLinkActive]="['router-link-active']" [routerLink]="['/dashboard']">Trang chủ</a>
+  </li>
+  <li *ngIf="isViewProspectMenu || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="nav-item">
+      <a class="nav-link" [routerLinkActive]="['router-link-active']" [routerLink]="['/prospect']">Tiềm năng</a>
+  </li>
+  <li *ngIf="isViewCustomerMenu || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="nav-item">
+      <a class="nav-link" [routerLinkActive]="['router-link-active']" [routerLink]="['/customer']">Khách hàng</a>
+  </li>
+  <li *ngIf="isViewContactMenu || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="nav-item">
+      <a class="nav-link" [routerLinkActive]="['router-link-active']" [routerLink]="['/contact']">Liên hệ</a>
+  </li>
+  <li *ngIf="isViewOpportunityMenu || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="nav-item">
+      <a class="nav-link" [routerLinkActive]="['router-link-active']" [routerLink]="['/opportunity']">Cơ hội</a>
+  </li>
+  <li *ngIf="isViewCampaignMenu || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="nav-item">
+      <a class="nav-link" [routerLinkActive]="['router-link-active']" [routerLink]="['/campaign']">Chiến dịch</a>
+  </li>
+  <li *ngIf="isViewActivityMenu || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="nav-item">
+      <a class="nav-link" [routerLinkActive]="['router-link-active']" [routerLink]="['/activity']">Hoạt động</a>
+  </li>
+  <li *ngIf="isViewPermissionMenu || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="nav-item">
+    <a class="nav-link" [routerLinkActive]="['router-link-active']" [routerLink]="['/permission']">Quản lý phân quyền</a>
+  </li>
+</ul>

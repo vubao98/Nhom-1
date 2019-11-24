@@ -1,0 +1,54 @@
+<li class="nav-item dropdown notification" ngbDropdown>
+    <a href="javascript:void(0)" class="dropdown-no-icon nav-link text-white mr-3" ngbDropdownToggle>
+        <i class="fa fa-bell"></i>
+        <span *ngIf="notificationCount && notificationCount.notificationCount" class="badge badge-danger main-badge">{{notificationCount.notificationCount}}</span>
+        <!-- <b class="caret"></b> -->
+        <span class="sr-only">(current)</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-right">
+        <div class="notification-item">
+            <div class="dropdown-menu-header font-weight-bold mb-2">
+                Thông báo
+            </div>
+        </div>
+
+        <div *ngIf="notificationItems">
+            <div class="notification-item" *ngFor="let item of notificationItems" [class.unread]="item.unread">
+                <a class="dropdown-item py-2" (click)="read(item)" *ngIf="item.moduleName == 'Campaign' || item.moduleName == 'Event' || item.moduleName == 'Work'">
+                    <span class="last">Bạn có 1 {{item.moduleName | translate}}
+                        <strong>{{item.moduleItemName}}</strong>
+                        <span *ngIf="item.startDate && item.endDate">diễn ra
+                            <strong>{{item.startDate | fromNow}}</strong>
+                            từ ngày
+                            <strong>{{item.startDate | date: 'dd/MM/yyyy'}}</strong>
+                            đến ngày
+                            <strong>{{item.endDate | date: 'dd/MM/yyyy'}}</strong>.</span>
+                        <span class="badge badge-info">Chi tiết</span>
+                    </span>
+                </a>
+                <a class="dropdown-item py-2" (click)="read(item)" *ngIf="(item.moduleName != 'Campaign' && item.moduleName != 'Event' && item.moduleName != 'Work')">
+                    <span *ngIf="!item.isLeaderNotification" class="last">
+                        <!-- Bạn được phân công phụ trách {{item.moduleName | translate}} <strong>{{item.moduleItemName}}</strong>  vào ngày {{item.createdDate | date: 'dd/MM/yyyy'}} -->
+                        Bạn được phân công phụ trách {{item.moduleName | translate}}
+                        <strong>{{item.moduleItemName}}</strong> vào ngày {{item.createdDate | date: 'dd/MM/yyyy'}}
+                        <span class="badge badge-info">Chi tiết</span>
+                    </span>
+                    <span *ngIf="item.isLeaderNotification" class="last">
+                        <!-- Nhóm {{item.employee && item.employee.name}} của bạn được phân công phụ trách {{item.moduleName | translate}} <strong>{{item.moduleItemName}}</strong>  vào ngày {{item.createdDate | date: 'dd/MM/yyyy'}} -->
+                        Nhóm <strong>{{item?.employeeGroup?.name}}</strong> của bạn được phân công phụ trách {{item.moduleName
+                        | translate}} <strong>{{item.moduleItemName}}</strong>
+                        vào ngày {{item.createdDate | date: 'dd/MM/yyyy'}}
+                        <span class="badge badge-info">Chi tiết</span>
+                    </span>
+                </a>
+            </div>
+        </div>
+
+        <div class="text-center mt-3 mb-2">
+            <a class="text-primary" [routerLink]="['/notification-list']">
+                Xem tất cả
+            </a>
+        </div>
+
+    </ul>
+</li>

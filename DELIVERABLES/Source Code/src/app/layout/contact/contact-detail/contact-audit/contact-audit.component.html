@@ -1,0 +1,6 @@
+<div class="pr-3" *ngIf="isContactHistories || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+  <app-audits-list *ngIf="id" [moduleName]="'contact'" [moduleItemId]="id" ></app-audits-list>
+</div>
+<div *ngIf="!isContactHistories && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin">
+  <p class="text-center">Bạn không có quyền xem dữ liệu này</p>
+</div>

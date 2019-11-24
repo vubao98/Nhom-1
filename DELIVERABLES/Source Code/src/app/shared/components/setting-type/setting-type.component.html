@@ -1,0 +1,65 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left" [ngSwitch]="type">
+      <span *ngSwitchCase="'prospect-evaluations'">Cấu hình đánh giá</span>
+      <span *ngSwitchCase="'prospectSource'">Cấu hình nguồn tiềm năng</span>
+      <span *ngSwitchCase="'opportunitySource'">Cấu hình nguồn cơ hội</span>
+      <span *ngSwitchCase="'opportunity-steps'">Cấu hình giai đoạn</span>
+      <span *ngSwitchCase="'customer-groups'">Cấu hình nhóm</span>
+      <span *ngSwitchCase="'campaign-types'">Cấu hình loại chiến dịch</span>
+      <span *ngSwitchCase="'event-types'">Cấu hình loại sự kiện</span>
+      <span *ngSwitchCase="'prospect-handler'">Cấu hình cần xử lý bởi</span>
+      <span *ngSwitchCase="'prospect-db'">Cấu hình D&B</span>
+      <span *ngSwitchCase="'prospect-approach-channel'">Cấu hình kênh tiếp cận</span>
+      <span *ngSwitchCase="'campaign-approach-channel'">Cấu hình Nguồn chiến dịch</span>
+  </h4>
+  <button type="button" class="close pull-right" aria-label="Close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <table class="table table-borderless table-striped table-hover">
+      <thead>
+          <tr class="table-header" [ngSwitch]="type">
+              <th *ngSwitchCase="'prospect-evaluations'">Tên đánh giá</th>
+              <th *ngSwitchCase="'prospectSource'">Tên nguồn tiềm năng</th>
+              <th *ngSwitchCase="'opportunitySource'">Tên nguồn cơ hội</th>
+              <th *ngSwitchCase="'opportunity-steps'">Tên giai đoạn</th>
+              <th *ngSwitchCase="'customer-groups'">Tên nhóm</th>
+              <th *ngSwitchCase="'campaign-types'">Tên loại chiến dịch</th>
+              <th *ngSwitchCase="'event-types'">Tên loại sự kiện</th>
+              <th *ngSwitchCase="'prospect-handler'">Tên cần xử lý bởi</th>
+              <th *ngSwitchCase="'prospect-db'">Tên D&B</th>
+              <th *ngSwitchCase="'prospect-approach-channel'">Tên kênh tiếp cận</th>
+              <th *ngSwitchCase="'campaign-approach-channel'">Tên nguồn chiến dịch</th>
+              <th class="text-right pr-2r">Thao tác</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr class="d-none">
+              <td class="p-0"></td>
+              <td class="p-0"></td>
+          </tr>
+          <tr *ngFor="let item of prospectEvaluationSettingList">
+              <td>
+                  <span *ngIf="!item.edit">{{item.text}}</span>
+                  <input [class.is-invalid]="!((item.text.length <= 50) && (item.text.length > 0)) && isSubmit" *ngIf="item.edit" class="form-control" [(ngModel)]="evaluationModel.text">
+                  <div class="invalid-feedback" *ngIf="!((item.text.length <= 50) && (item.text.length > 0)) && isSubmit"> Tên {{typeStr}} phải lớn hơn 0 và nhỏ hơn 50 ký tự</div>
+              </td>
+              <td class="text-right pr-2r">
+                  <span class="ml-2">
+                      <i *ngIf="!item.edit && !(type == 'opportunity-steps' && (item.extra == 'Success' || item.extra == 'Failure' || item.extra == 'QuatationsForCustomers'))" (click)="editEvaluationType(item)" class="fa fa-pencil pointer"
+                          aria-hidden="true"></i>
+                      <i *ngIf="item.edit" (click)="createOrUpdateEvaluationType(item)" class="fa fa-check pointer"
+                          aria-hidden="true"></i>
+                  </span>
+                  <span class="ml-2">
+                      <i class="fa fa-trash-o pointer" *ngIf="!(type == 'opportunity-steps' && (item.extra == 'Success' || item.extra == 'Failure'))" (click)="deleteEvaluationType(item)" aria-hidden="true"></i>
+                  </span>
+              </td>
+          </tr>
+      </tbody>
+  </table>
+  <button class="btn btn-primary ml-2" (click)="addEvaluationType()" [disabled]="!isAddMoreEvaluation">
+      <i class="fa fa-plus" aria-hidden="true"></i> Thêm
+  </button>
+</div>

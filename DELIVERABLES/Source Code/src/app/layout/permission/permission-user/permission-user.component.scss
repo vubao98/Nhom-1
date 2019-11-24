@@ -1,0 +1,40 @@
+:host /deep/ {
+
+    .custom-checkbox {
+        padding: .5rem;
+        margin-left: 2px;
+        margin-right: .25rem;
+    }
+}
+
+.permission-container {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+
+    .permission-container--menu {
+        border-right: 1px solid rgba(0, 0, 0, 0.1);
+    }
+}
+
+ul {
+    li {
+        padding: .5rem 1rem;
+
+        &.active {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        &:focus {
+            outline: none;
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}
+
+.custom-control-input--disabled:disabled ~ .custom-control-indicator {
+    background-color: #17a2b8;
+    opacity: .5;
+}

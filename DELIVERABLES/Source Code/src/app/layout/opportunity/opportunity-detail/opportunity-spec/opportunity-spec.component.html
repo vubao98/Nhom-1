@@ -1,0 +1,149 @@
+<div *ngIf="isOpportunityViewOpportunityDetail || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+    <div [@routerTransition] *ngIf="opportunity$ | async as opportunity">
+        <div class="card-collapse">
+            <div class="header" (click)="isCollapsedMain = !isCollapsedMain" [attr.aria-expanded]="!isCollapsedMain"
+                aria-controls="info-main">
+                <i class="fa fa-caret-down mr-3"></i>Chi tiết cơ hội</div>
+            <div class="body" id="info-main" [ngbCollapse]="isCollapsedMain">
+                <table class="w-100 table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Mã báo giá</td>
+                            <td class="w-25">{{opportunity.proposalStr || 'Không có'}}</td>
+                            <!-- <td class="w-25 bg-light text-right label">Tên cơ hội</td>
+                            <td class="w-25">{{opportunity.name || 'Không có'}}</td> -->
+                            <td class="w-25 bg-light text-right label">Ngày dự kiến xong</td>
+                            <td class="w-25">{{(opportunity.opportunityDateStop | date: 'dd/MM/yyyy') || 'Không có'}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Tên cơ hội</td>
+                            <td class="w-25">{{opportunity.name || 'Không có'}}</td>
+                            <!-- <td class="w-25 bg-light text-right label">
+                                <span *ngIf="!opportunity.customer && !opportunity.prospectCustomer"> Tiềm năng</span>
+                                <span *ngIf="opportunity.customer">Khách hàng</span>
+                                <span *ngIf="opportunity.prospectCustomer">Tiềm năng</span>
+                            </td>
+                            <td class="w-25">
+                                <span *ngIf="!opportunity.customer && !opportunity.prospectCustomer">Không có</span>
+                                <a *ngIf="opportunity.customer"
+                                    [routerLink]="['/customer/detail', opportunity.customer.id]">
+                                    {{opportunity.customer.name}}
+                                </a>
+                                <a *ngIf="opportunity.prospectCustomer"
+                                    [routerLink]="['/prospect/detail', opportunity.prospectCustomer.id]">
+                                    {{opportunity.prospectCustomer.name}}
+                                </a>
+                            </td> -->
+                            <td class="w-25 bg-light text-right label">Giai đoạn</td>
+                            <td class="w-25">{{stepItem?.text || 'Không có'}}</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">
+                                <span *ngIf="!opportunity.customer && !opportunity.prospectCustomer"> Tiềm năng</span>
+                                <span *ngIf="opportunity.customer">Khách hàng</span>
+                                <span *ngIf="opportunity.prospectCustomer">Tiềm năng</span>
+                            </td>
+                            <td class="w-25">
+                                <span *ngIf="!opportunity.customer && !opportunity.prospectCustomer">Không có</span>
+                                <a *ngIf="opportunity.customer"
+                                    [routerLink]="['/customer/detail', opportunity.customer.id]">
+                                    {{opportunity.customer.name}}
+                                </a>
+                                <a *ngIf="opportunity.prospectCustomer"
+                                    [routerLink]="['/prospect/detail', opportunity.prospectCustomer.id]">
+                                    {{opportunity.prospectCustomer.name}}
+                                </a>
+                            </td>
+                            <!-- <td class="w-25 bg-light text-right label">Liên hệ</td>
+                            <td class="w-25 color">
+                                <a *ngFor="let contact of opportunity.contacts" (click)="goToDeitalContact(contact.id)">
+                                    <p>{{contact.text}}</p>
+                                </a>
+                                <span *ngIf="opportunity.contacts.length == 0">Không có</span>
+                            </td> -->
+                            <td class="w-25 bg-light text-right label">Xác suất</td>
+                            <td class="w-25">
+                                {{(opportunity.probability && opportunity.probability + '%') || 'Không có'}}</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Liên hệ</td>
+                            <td class="w-25 color">
+                                <a *ngFor="let contact of opportunity.contacts" (click)="goToDeitalContact(contact.id)">
+                                    <p>{{contact.text}}</p>
+                                </a>
+                                <span *ngIf="opportunity.contacts.length == 0">Không có</span>
+                            </td>
+                            <!-- <td class="w-25 bg-light text-right label">Phân loại</td>
+                            <td class="w-25">{{(opportunity.category | translate) || 'Không có'}}</td> -->
+                            <td class="w-25 bg-light text-right label">Chiến dịch</td>
+                            <td class="w-25">{{opportunity.campaign?.name || 'Không có'}}
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Phân loại</td>
+                            <td class="w-25">{{(opportunity.category | translate) || 'Không có'}}</td>
+                            <!-- <td class="w-25 bg-light text-right label">Nguồn cơ hội</td>
+                            <td class="w-25">{{opportunity.prospectSource?.name || 'Không có'}}</td> -->
+                            <td class="w-25 bg-light text-right label">Giá trị dự kiến</td>
+                            <td class="w-25">{{opportunity.expectedValue | vnCurrency}}</td>
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Nguồn cơ hội</td>
+                            <td class="w-25">{{opportunity.prospectSource?.name || 'Không có'}}</td>
+                            <!-- <td class="w-25 bg-light text-right label">Kênh tiếp cận</td>
+                            <td class="w-25">{{opportunity.approachChannelStr || 'Không có'}}</td> -->
+                            <td class="w-25 bg-light text-right label">Model</td>
+                            <td class="w-25">{{opportunity.modelsStr || 'Không có'}}</td>
+                            
+                            <!-- <td class="w-25 bg-light text-right label">Chi nhánh</td>
+                        <td class="w-25">{{opportunity.branch?.name || 'Không có'}}</td> -->
+                            
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Kênh tiếp cận</td>
+                            <td class="w-25">{{opportunity.approachChannelStr || 'Không có'}}</td>
+                            <!-- <td class="w-25 bg-light text-right label">Nhóm phụ trách</td>
+                            <td class="w-25">{{opportunity.assignToGroup && opportunity.assignToGroup.name || 'Không có'}}</td> -->
+                            <td class="w-25 bg-light text-right label">Cá nhân</td>
+                            <td class="w-25">
+                                <input type="checkbox" class="w-25 form-control text-right checkbox" disabled
+                                    [ngModel]="opportunity.isShare">
+                            </td>
+                            
+                        </tr>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Người phụ trách</td>
+                            <td class="w-25">{{opportunity.assignTo && opportunity.assignTo.name || 'Không có'}}</td>
+                            <td class="w-25 bg-light text-right label">Nhóm phụ trách</td>
+                            <td class="w-25">{{opportunity.assignToGroup && opportunity.assignToGroup.name || 'Không có'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+        <div class="card-collapse">
+            <div class="header" (click)="isCollapsedDesc = !isCollapsedDesc" [attr.aria-expanded]="!isCollapsedDesc"
+                aria-controls="info-desc">
+                <i class="fa fa-caret-down mr-3"></i>Mô tả chi tiết</div>
+            <div class="body" id="info-desc" [ngbCollapse]="isCollapsedDesc">
+                <table class="w-100 table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td class="w-25 bg-light text-right label">Mô tả</td>
+                            <td class="w-75">{{opportunity.description || 'Không có'}}</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="!isOpportunityViewOpportunityDetail && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin">
+    <p class="text-center">Bạn không có quyền xem dữ liệu này</p>
+</div>

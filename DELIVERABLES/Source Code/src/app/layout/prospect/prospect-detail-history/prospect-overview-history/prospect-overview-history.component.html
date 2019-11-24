@@ -1,0 +1,90 @@
+<div [@routerTransition] class="row no-gutters" *ngIf="prospect$ | async as prospect">
+
+  <div class="col-md-7">
+      <div class="card mb-3">
+          <div class="card-body" id="info-main" [ngbCollapse]="isCollapsedMain">
+              <table class="w-100 table table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="w-13 bg-light text-left label">Họ và tên</td>
+                        <td class="w-23">{{prospect.fullName}}</td>
+                    </tr>
+                    <tr>
+                        <td class="w-13 bg-light text-left label">Đánh giá</td>
+                        <td class="w-23">
+                            <div [class.status-1]='prospect.comment=="Potential"' [class.status-2]='prospect.comment=="Nomal"' [class.status-3]='prospect.comment=="NonPotential"'>
+                                {{ (prospect.comment | translate) || 'Không có'}}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="w-13 bg-light text-left label">Điện thoại chính</td>
+                        <td class="w-23">
+                            <span appPhoneNumberCallable *ngIf="prospect.phoneNumberCustomer">{{prospect.phoneNumberCustomer}}</span>
+                            <span *ngIf="!prospect.phoneNumberCustomer">Không có</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="w-13 bg-light text-left label">Nguồn tiềm năng</td>
+                        <td class="w-23">{{prospect.source?.name || 'Không có'}}</td>
+                    </tr>
+                    <tr>
+                        <td class="w-13 bg-light text-left label">Tên Công ty / Tổ chức</td>
+                        <td class="w-23">{{prospect.companyName || 'Không có'}}</td>
+                    </tr>
+                    <tr>
+                        <td class="w-13 bg-light text-left label">Email chính</td>
+                        <td class="w-23">
+                            <a [href]="'mailto:' + prospect.email" *ngIf="prospect.email">{{prospect.email}}</a>
+                            <span *ngIf="!prospect.email">Không có</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="w-13 bg-light text-left label">Website</td>
+                        <td class="w-23">
+                            <a [href]="'http://' + prospect.website" target="_blank" *ngIf="prospect.website">{{prospect.website}}</a>
+                            <span *ngIf="!prospect.website">Không có</span>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td class="w-25 bg-light text-left label">Người phụ trách</td>
+                        <td class="w-25">{{prospect.assignTo && prospect.assignTo.name}}</td>
+                    </tr>
+                    <tr>
+                        <td class="w-25 bg-light text-left label">Tỉnh/Thành phố</td>
+                        <td class="w-25">{{getLocation(prospect.location, 'StateProvince') || 'Không có'}}</td>
+                    </tr>
+                    <tr>
+                        <td class="w-25 bg-light text-left label">Quốc gia</td>
+                        <td class="w-25">{{getLocation(prospect.location, 'Country') || 'Không có'}}</td>
+                    </tr>
+
+                </tbody>
+              </table>
+              <hr>
+              <div class="d-flex">
+                  <a [routerLink]="['../spec']" class="btn btn-primary mr-auto">
+                      Hiển thị đầy đủ
+                  </a>
+                  <div class="d-flex flex-column">
+                    <span class="metadata">Ngày tạo: {{prospect.createdDate | date: 'dd/MM/yyyy HH:mm'}}</span>
+                    <span class="metadata"[class.d-none]="prospect.createdDate==prospect.updatedDate">Ngày sửa: {{prospect.updatedDate | date: 'dd/MM/yyyy HH:mm'}}</span>
+                  </div>
+
+              </div>
+
+          </div>
+      </div>
+
+      <app-comments [moduleName]="'prospect'" [moduleItemId]="prospect.id" [viewMode]="'partial'" [readOnly]=true></app-comments>
+
+  </div>
+  <div class="col-md-5 pl-3 pr-4">
+      <app-activities [moduleName]="'prospect'" [moduleItemId]="prospect.id" [moduleItemName]="prospect.lastName+' '+prospect.firstName" [readOnly]=true></app-activities>
+      <app-audits [moduleName]="'prospect'" [moduleItemId]="prospect.id"></app-audits>
+  </div>
+
+
+
+</div>

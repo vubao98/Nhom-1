@@ -1,0 +1,6 @@
+<div class="pr-3" *ngIf="isContactActivities || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+  <app-activity-table [moduleName]="'contact'" [moduleItemId]="id" [moduleItemName]="name"></app-activity-table>
+</div>
+<div *ngIf="!isContactActivities && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin">
+  <p class="text-center">Bạn không có quyền xem dữ liệu này</p>
+</div>

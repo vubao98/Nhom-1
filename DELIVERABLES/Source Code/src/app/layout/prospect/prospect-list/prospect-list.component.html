@@ -1,0 +1,441 @@
+<div [@routerTransition]>
+        <div class="search-box d-flex">
+            <h5 *ngIf="isProspectViewProspectInformation || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin"
+                class="mr-auto d-flex align-items-end">Danh sách tiềm năng</h5>
+            <div *ngIf="isProspectViewProspectInformation || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="input-group">
+                <span class="input-group-addon">Tìm kiếm theo</span>
+                <input type="text" class="form-control pr-3 search-input" placeholder="Tên, họ, sđt, email,.."
+                    [value]="searchTerm$.value" (keyup)="searchTerm$.next($event.target.value)">
+                <i class="fa fa-times btn-clear-search" [class.d-none]="!searchTerm$.value" (click)="searchTerm$.next('')"
+                    aria-hidden="true"></i>
+            </div>
+    
+            <div *ngIf="isCongCu || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="btn-group ml-2"
+                [class.ml-auto]="!isProspectViewProspectInformation && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin" ngbDropdown>
+                <button type="button" class="btn btn-primary" ngbDropdownToggle data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    Công cụ &nbsp;
+                </button>
+                <div class="dropdown-menu" ngbDropdownMenu>
+                    <a *ngIf="isProspectDeleteProspect || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="dropdown-item"
+                        (click)="multiDelete()">Xóa</a>
+                    <button *ngIf="isProspectSendEmail || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin"
+                        [disabled]="disableSendEmail" class="dropdown-item pointer" (click)="openEmailEditor()">Gửi
+                        email</button>
+                    <div class="dropdown-divider"></div>
+                    <!-- <a class="dropdown-item" (click)="sendFile()">Nhập file
+                        <input type="file"/>
+                    </a> -->
+                    <div *ngIf="isProspectImportDownloadProspectTemplate || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin"
+                        class="fileUpload dropdown-item">
+                        <a>Nhập file</a>
+                        <input type="file" class="upload" (change)="fileChange($event)" />
+                    </div>
+                    <a *ngIf="isProspectExportFile || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="dropdown-item"
+                        (click)="exportFileExcel()">Xuất file</a>
+                    <div class="dropdown-divider"></div>
+                    <a *ngIf="isProspectImportDownloadProspectTemplate || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin"
+                        class="dropdown-item" (click)="downTemplate()">Tải template</a>
+                </div>
+            </div>
+    
+            <button *ngIf="isProspectAddProspect || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="btn btn-primary ml-2"
+                [class.ml-auto]="!isProspectViewProspectInformation && !isCongCu && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin"
+                [routerLink]="['/prospect/create']">
+                <i class="fa fa-plus" aria-hidden="true"></i>&nbsp; Thêm tiềm năng</button>
+            <button *ngIf="isProspectViewProspectInformation || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin"
+                class="btn btn-primary ml-2" (click)="refresh(true)">
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+            </button>
+        </div>
+        <hr *ngIf="isProspectViewProspectInformation || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+        <div *ngIf="isProspectViewProspectInformation || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin"
+            class="d-flex justify-content-center align-items-center filter-div mt--3">
+            <div class="filter-bar" appSameHeight="col-setting">
+                <div class="form-inline display-block">
+                    <div class="form-inline">
+                        <div class="form-group mr-sm-2 flex-column align-items-start">
+                            <label for="" class="form-label">Từ</label>
+                            <div class="input-group">
+                                <owl-date-time #startDate [readonlyInput]="datePickerConfig.readonlyInput"
+                                    [(ngModel)]="filterModel.fromDate"
+                                    [dateFormat]="datePickerConfig.dateFormat"
+                                    [placeHolder]="datePickerConfig.datePlaceHolder" [locale]="datePickerConfig.vi"
+                                    [type]="datePickerConfig.calendarType">
+                                </owl-date-time>
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group mr-sm-2 flex-column align-items-start">
+                            <label for="" class="form-label">Đến</label>
+                            <div class="input-group">
+                                <owl-date-time #endDate [readonlyInput]="datePickerConfig.readonlyInput"
+                                    [(ngModel)]="filterModel.toDate"
+                                    [dateFormat]="datePickerConfig.dateFormat"
+                                    [placeHolder]="datePickerConfig.datePlaceHolder" [locale]="datePickerConfig.vi"
+                                    [type]="datePickerConfig.calendarType">
+                                </owl-date-time>
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group flex-column align-items-start">
+                            <label for="business" class="form-label">Đánh giá</label>
+                            <span class="custom-dropdown">
+                                <select class="form-control" [(ngModel)]="filterModel.rate">
+                                    <option [ngValue]="null">--Lựa chọn--</option>
+                                    <option *ngFor="let item of evaluationList | async" [value]="item.value">{{item.text}}
+                                    </option>
+                                </select>
+                            </span>
+                        </div>
+                        <div class="form-group ml-sm-2 flex-column align-items-start">
+                            <label for="business" class="form-label">Nguồn tiềm năng</label>
+                            <span class="custom-dropdown">
+                                <select class="form-control" [(ngModel)]="filterModel.prospectSource">
+                                    <option [ngValue]="null">--Lựa chọn--</option>
+                                    <option *ngFor="let item of prospectSourceList | async" [value]="item.id">{{item.text}}
+                                    </option>
+                                </select>
+                            </span>
+                        </div>
+                        <div class="form-group ml-sm-2 flex-column align-items-start">
+                            <label for="business" class="form-label">Cần xử lý bởi</label>
+                            <span class="custom-dropdown">
+                                <select class="form-control" [(ngModel)]="filterModel.handler">
+                                    <option [ngValue]="null">--Lựa chọn--</option>
+                                    <option *ngFor="let item of prospectHandlerList | async" [value]="item.id">{{item.text}}
+                                    </option>
+                                </select>
+                            </span>
+                        </div>
+                        <div class="form-group ml-sm-2 flex-column align-items-start">
+                            <label for="business" class="form-label">Đã tiếp cận</label>
+                            <span class="custom-dropdown">
+                                <select class="form-control" [(ngModel)]="filterModel.approached">
+                                    <option [ngValue]="null">--Lựa chọn--</option>
+                                    <option value="true">Có</option>
+                                    <option value="false">Không</option>
+                                </select>
+                            </span>
+                        </div>
+                        <div class="form-group ml-sm-2 mr-sm-2 flex-column align-items-start">
+                            <label for="business" class="form-label">Kênh tiếp cận</label>
+                            <span class="custom-dropdown">
+                                <select class="form-control" [(ngModel)]="filterModel.approachChannel">
+                                    <option [ngValue]="null">--Lựa chọn--</option>
+                                    <option *ngFor="let item of approachChanelList | async" [value]="item.id">{{item.text}}
+                                    </option>
+                                </select>
+                            </span>
+                        </div>
+                        <div class="form-group mr-sm-2 flex-column align-items-start">
+                            <label for="business" class="form-label">Nhóm phụ trách</label>
+                            <span class="custom-dropdown">
+                                <i *ngIf="!((employeeGroupList | async)?.length > 0)" class="ui-autocomplete-loader fa fa-circle-o-notch fa-spin fa-fw ng-star-inserted ui-autocomplete-loader--custom"></i>
+                                <select class="form-control" [(ngModel)]="filterModel.assignToGroup" (change)="assignToGroupChange($event.target.value)">
+                                    <option [value]="null">--Lựa chọn--</option>
+                                    <option [value]="0">Chưa có nhóm phụ trách</option>
+                                    <option *ngFor="let item of employeeGroupList | async" [value]="item.id">
+                                        {{item.text}}</option>
+                                </select>
+                            </span>
+                        </div>
+                        <div class="form-group mr-sm-2 flex-column align-items-start">
+                            <label for="business" class="form-label">Người phụ trách</label>
+                            <span class="custom-dropdown">
+                                <i *ngIf="!((employeeList | async)?.length > 0)" class="ui-autocomplete-loader fa fa-circle-o-notch fa-spin fa-fw ng-star-inserted ui-autocomplete-loader--custom"></i>
+                                <select class="form-control" [(ngModel)]="filterModel.assignTo">
+                                    <option [ngValue]="null">--Lựa chọn--</option>
+                                    <option [ngValue]="'0'">Chưa có người phụ trách</option>
+                                    <option *ngFor="let item of employeeList | async" [value]="item.id">
+                                        {{item.text}}</option>
+                                </select>
+                            </span>
+                        </div>
+                        <div class="form-group mr-sm-2 flex-column align-items-start">
+                            <label for="business" class="form-label">Tình trạng</label>
+                            <span class="custom-dropdown">
+                                <i *ngIf="!((statusList | async)?.length > 0)" class="ui-autocomplete-loader fa fa-circle-o-notch fa-spin fa-fw ng-star-inserted ui-autocomplete-loader--custom"></i>
+                                <select class="form-control" [(ngModel)]="filterModel.potentialStatus">
+                                    <option [ngValue]="null">--Lựa chọn--</option>
+                                    <option [ngValue]="''">Chưa có tình trạng</option>
+                                    <option *ngFor="let item of statusList | async" [value]="item.id">
+                                        {{item.text}}</option>
+                                </select>
+                            </span>
+                        </div>
+                        <div class="d-flex align-items-end">
+                            <div class="form-group flex-column align-items-start">
+                                <label for="business" class="form-label">Sinh nhật trong tháng</label>
+                                <span class="custom-dropdown">
+                                    <select class="form-control" [(ngModel)]="filterModel.month">
+                                        <option [ngValue]="null">Tất cả</option>
+                                        <option [value]="month">Có</option>
+                                        <!-- <option [ngValue]="0">Không</option> -->
+                                    </select>
+                                </span>
+                            </div>
+                            <button type="submit" class="btn btn-primary ml-sm-3" (click)="filter()">
+                                <i class="fa fa-filter" aria-hidden="true"></i>&nbsp; Lọc
+                            </button>
+    
+                            <button class="btn btn-secondary ml-sm-3" (click)="clearFilter()">
+                                <i class="fa fa-times"></i>&nbsp; Xóa lọc
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-group col-setting" dropdown #colSetting="bs-dropdown" placement="bottom right"
+                [autoClose]="false">
+                <div id="button-alignment" dropdownToggle class="dropdown-toggle d-flex btn-col"
+                    aria-controls="dropdown-alignment">
+                    <i class="fa fa-cog"></i> Cột <i class="fa fa-caret-down" aria-hidden="true"></i>
+                </div>
+                <div id="dropdown-alignment" *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu"
+                    aria-labelledby="button-alignment">
+                    <div class="popup-dynamic-col">
+                        <div class="d-flex justify-content-between">
+                            <div class="">{{columnSelectedCount}}/{{listColumnSetting?.length}} cột được chọn</div>
+                            <div>
+                                <span class="span-cursor" (click)="chooseAllColumnSetting(colSetting)">Chọn tất cả</span>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="wrapper">
+                            <div class="form-check-inline" *ngFor="let item of listColumnSettingTemp">
+                                <div class="d-flex">
+                                    <div>
+                                        <input type="checkbox" [ngModel]="!item.hidden" class="pointer mt-1"
+                                            (click)="columnSettingClick(item.id)">
+                                    </div>
+                                    <div class="pointer" (click)="columnSettingClick(item.id)"> &nbsp;{{item.fieldCaption}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div>
+                            <div class="d-flex">
+                                <div class="mr-auto">
+                                    <div class="center-parent w-100 h-100">
+                                        <div>
+                                            <span class="span-cursor" (click)="setColumnSetting(colSetting,true)">Trở về
+                                                mặc
+                                                định</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-1">
+                                    <button class="btn btn-secondary" (click)="isCancel(colSetting)">Hủy</button>
+                                </div>
+                                <div class="p-1 pr-0">
+                                    <button class="btn btn-primary" (click)="setColumnSetting(colSetting)">Áp dụng</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    
+    
+        <div *ngIf="isProspectViewProspectInformation  || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="b-pin-col-wrapper">
+            <ngx-loading [show]="loading"></ngx-loading>
+            <div class="b-pin-col-scroller" id="wrap1" #wrap1 (scroll)="syncScroll1()">
+                <table class="b-pin-col-table table" #tablePin>
+                    <thead>
+                        <tr>
+                            <th class="text-center no-sort b-pin-col-sticky-col th-stt-pad">
+                                <div class="d-flex justify-content-around align-items-center h-100">
+                                    <span>
+                                        <label class="custom-control custom-checkbox stt-checkbox--mar">
+                                            <input type="checkbox" class="custom-control-input"
+                                                [(ngModel)]=checkboxSeclectAll
+                                                (change)="onSelectAll($event.target.checked)">
+                                            <span class="custom-control-indicator"></span>
+                                        </label>
+                                    </span>
+                                    <span>
+                                        STT
+                                    </span>
+                                </div>
+                            </th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerDate')" class="mw-100">Ngày phát sinh tiềm
+                                năng</th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerTitle')" class="mw-100">D/xưng</th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerName')" class="mw-100">Họ và tên</th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerTel')" class="mw-100">ĐT chính</th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerCellPhone')" class="mw-100">ĐT di động</th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerEmail')" class="mw-100">Email</th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerSocialLink')" class="mw-100">Social link</th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerAskShowroomAddress')" class="mw-100">Hỏi
+                                địa chỉ showroom</th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerDescription')" class="mw-100">Mô tả</th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerModels')" class="mw-100">Model</th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerHandler')" class="mw-100">Cần xử lý bởi
+                            </th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerApproached')" class="mw-100">Đã tiếp cận
+                            </th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerStatus')" class="mw-100">Tình trạng</th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerResult')" class="mw-100">Kết quả</th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerPromotionCare')" class="mw-100">CTKM quan
+                                tâm</th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerRate')" class="mw-100">Đánh giá</th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerOnlineSaleOpportunity')" class="mw-100">Cơ
+                                hội bán hàng</th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerCompany')" class="mw-100">Công ty</th>
+                            <th [class.d-none]="getColumnShow('FK_ARCustomerResourceID')" class="mw-100">Nguồn tiềm năng
+                            </th>
+                            <th [class.d-none]="getColumnShow('ARProspectObjectID')" class="mw-100">Chiến dịch</th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerGender')" class="mw-100">Giới tính</th>
+                            <th [class.d-none]="getColumnShow('ARPropectRevenueDueYear')" class="mw-100">Doanh thu hằng năm
+                            </th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerWebsite')" class="mw-100">Website</th>
+                            <th [class.d-none]="getColumnShow('FK_HRGroupID')" class="mw-100">Nhóm phụ trách</th>
+                            <th [class.d-none]="getColumnShow('FK_HREmployeeID')" class="mw-100">Người phụ trách</th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerBirthday')" class="mw-100">Ngày sinh</th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerLunarBirthday')" class="mw-100">Năm sinh âm
+                            </th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerAddress')" class="mw-100">Địa chỉ</th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerRetails')" class="mw-100">Retail</th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerDBs')" class="mw-100">D&B</th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerAdsID')" class="mw-100">Ads ID</th>
+                            <th [class.d-none]="getColumnShow('ARProspectCustomerApproachChannels')" class="mw-100">Kênh tiếp
+                                cận</th>
+                            <th class="table-action b-pin-col-sticky-col-right text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of pagedResult.items; let i = index" appRowHover>
+                            <td class="text-center b-pin-col-sticky-col td-stt--pad">
+                                <div class="d-flex justify-content-around align-items-center h-100">
+                                    <span>
+                                        <label class="custom-control custom-checkbox stt-checkbox--mar">
+                                            <input type="checkbox" class="custom-control-input"
+                                                [(ngModel)]="item.checkboxSelected">
+                                            <span class="custom-control-indicator"></span>
+                                        </label>
+                                    </span>
+                                    <span>
+                                        {{i + pagedResult.currentPage * pagedResult.pageSize + 1}}
+                                    </span>
+                                </div>
+                            </td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerDate')">
+                                {{ (item.date | date:'dd/MM/yyyy') || 'Không có' }}</td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerTitle')">
+                                {{ (item.salutation | translate)||'Không có' }}</td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerName')">
+                                <a [routerLink]="isEyeVisible() || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin ? ['../detail', item.id, 'spec'] : []" [title]="item.fullName">{{ item.fullName }}</a>
+                            </td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerTel')">
+                                <span appPhoneNumberCallable>{{ item.companyPhone}}</span>
+                                <span *ngIf="!item.companyPhone">Không có</span>
+                            </td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerCellPhone')">
+                                <span appPhoneNumberCallable>{{ item.mobilePhone }}</span>
+                                <span *ngIf="!item.mobilePhone">Không có</span>
+                            </td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerEmail')">
+                                <a [href]="'mailto:' + item.email" [title]="item.email"
+                                    *ngIf="item.email">{{ item.email || 'Không có' }}</a>
+                                <span *ngIf="!item.email">Không có</span>
+                            </td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerSocialLink')">
+                                {{ item.socialLink || 'Không có' }}</td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerAskShowroomAddress')">
+                                {{ item.askShowroomAddress ? 'Có' : 'Không' }}</td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerDescription')">
+                                {{item.description || 'Không có'}}</td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerModels')">{{ item.models || 'Không có' }}
+                            </td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerHandler')">
+                                {{ item.handlerStr || 'Không có' }}</td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerApproached')">
+                                {{ item.approached ? 'Đã tiếp cận' : 'Chưa tiếp cận' }}</td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerStatus')">
+                                {{(item.potentialStatus | translate) || 'Không có'}}</td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerResult')">{{ item.result || 'Không có' }}
+                            </td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerPromotionCare')">
+                                {{ item.promotionCare || 'Không có' }}</td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerRate')">
+                                {{ item.rateText ||'Không có'}}
+                            </td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerOnlineSaleOpportunity')">
+                                {{ item.onlineSaleOpportunity ? 'Có' : 'Không' }}</td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerCompany')"
+                                [title]="item.companyName ? item.companyName : ''">{{item.companyName || 'Không có'}}</td>
+                            <td [class.d-none]="getColumnShow('FK_ARCustomerResourceID')">
+                                {{(item.source && item.source.name) || 'Không có'}}</td>
+                            <td [class.d-none]="getColumnShow('ARProspectObjectID')">
+                                <a *ngIf="item.campaign && item.campaign.id"
+                                    [routerLink]="['/campaign/detail/', item.campaign.id]">{{item.campaign.name}}</a>
+                                <span *ngIf="!(item.campaign && item.campaign.id)">Không có</span>
+                            </td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerGender')">{{item.gender || 'Không có'}}
+                            </td>
+                            <td [class.d-none]="getColumnShow('ARPropectRevenueDueYear')">
+                                {{item.revenue ? (item.revenue | vnCurrency) : 'Không có'}}</td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerWebsite')">{{item.website || 'Không có'}}
+                            </td>
+                            <td [class.d-none]="getColumnShow('FK_HRGroupID')">{{ item.assignToGroup || 'Không có' }}</td>
+                            <td [class.d-none]="getColumnShow('FK_HREmployeeID')">{{ item.assignTo || 'Không có' }}</td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerBirthday')">
+                                {{(item.dob | date:'dd/MM/yyyy') || 'Không có'}}</td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerLunarBirthday')">
+                                {{item.lunarBirthday || 'Không có'}}</td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerAddress')">{{item.address || 'Không có'}}
+                            </td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerRetails')">{{ item.retails || 'Không có' }}
+                            </td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerDBs')">{{ item.dab || 'Không có' }}</td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerAdsID')">{{ item.adsID || 'Không có' }}
+                            </td>
+                            <td [class.d-none]="getColumnShow('ARProspectCustomerApproachChannels')">
+                                {{ item.approachChannels || 'Không có' }}</td>
+                            <td class="b-pin-col-sticky-col-right d-flex align-items-center">
+                                <div class="table-action">
+                                    <a *ngIf="isEyeVisible() || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin"
+                                        [routerLink]="['../detail', item.id , 'spec']">
+                                        <i class="fa fa-eye text-warning" aria-hidden="true"></i>
+                                    </a>
+                                    <a *ngIf="isProspectEditProspect || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin"
+                                        [routerLink]="['/prospect/edit', item.id]" class=" text-success ml-3">
+                                        <i class="fa fa-pencil" aria-hidden="true"> </i>
+                                    </a>
+                                    <a *ngIf="(isProspectSendEmail && item.email) || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin"
+                                        class="text-info ml-3" [href]="item.email ? 'mailto:' +  item.email : 'mailto:'">
+                                        <i class="fa fa-envelope-o " aria-hidden="true"></i>
+                                    </a>
+                                    <a *ngIf="isProspectDeleteProspect || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin"
+                                        (click)="delete(item.id)" class=" text-dark ml-3">
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                    </a>
+                                    <span
+                                        *ngIf="!isEyeVisible() && !isProspectEditProspect && !isProspectSendEmail && !isProspectDeleteProspect && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin">Không
+                                        có</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-center mt-3" *ngIf="(pagedResult.items && pagedResult.items.length == 0) && !loading">Không
+                    có dữ liệu
+                </div>
+            </div>
+        </div>
+        <div *ngIf="isProspectViewProspectInformation  || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin" class="scrollbar-fake" id="wrap2" #wrap2 (scroll)="syncScroll2()">
+            <div class="scrollbar-fake-content" #fakeScrollBar></div>
+        </div>
+        <app-pagination *ngIf="isProspectViewProspectInformation  || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin"
+            [pagedResult]="pagedResult" (pagedResultChange)="pagedResultChange($event)"></app-pagination>
+    
+    </div>
+    <ngx-spinner bdColor="rgba(51, 51, 51, 0.7)" size="medium" color="#fff" type="ball-clip-rotate-multiple"></ngx-spinner>

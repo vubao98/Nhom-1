@@ -1,0 +1,7 @@
+<div *ngIf="isProspectAddComment || isProspectViewComments || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+    <app-comments *ngIf="id" [moduleName]="'prospect'" [moduleItemId]="id" [viewMode]="'all'" [addComment]="isProspectAddComment" [viewComment]="isProspectViewComments"></app-comments>
+</div>
+
+<div *ngIf="!isProspectAddComment && !isProspectViewComments && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin">
+    <p class="text-center">Bạn không có quyền xem dữ liệu này</p>
+ </div>

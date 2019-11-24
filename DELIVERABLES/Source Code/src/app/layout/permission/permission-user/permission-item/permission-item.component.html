@@ -1,0 +1,9 @@
+<div class="row">
+  <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>{{item.name}}</div>
+  <div class="col-md-1 text-center">
+    <label class="custom-control custom-checkbox">
+      <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="isDisabled" (click)="clickPermission()" [value]="item.no" [checked]="getCheckedPermission(item.no)" #viewProspectInfo>
+      <span class="custom-control-indicator"></span>
+    </label>
+  </div>
+</div>

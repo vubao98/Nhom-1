@@ -1,0 +1,90 @@
+<div *ngIf="isContactContactSummary || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+    <div [@routerTransition] class="row no-gutters" *ngIf="contact$ | async as contact">
+        <div class="col-md-7">
+            <div class="card mb-3">
+                <div class="card-body" id="info-main" [ngbCollapse]="isCollapsedMain">
+                    <table class="w-100 table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="w-13 bg-light text-left label">Họ và tên</td>
+                                <td class="w-23">{{contact.name || 'Không có' }}</td>
+
+                            </tr>
+                            <tr>
+                                <td class="w-13 bg-light text-left label">Điện thoại chính</td>
+                                <td class="w-23">
+                                    <span appPhoneNumberCallable *ngIf="contact.companyPhone">{{contact.companyPhone}}</span>
+                                    <span *ngIf="!contact.companyPhone">Không có</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="w-13 bg-light text-left label">Tên khách hàng</td>
+                                <td class="w-23 color">
+
+                                    <a *ngFor="let customer of contact.customer" (click)="goToDeitalCustomer(customer.id)">
+                                        <p>{{customer.text}}</p>
+                                    </a>
+                                    <span *ngIf="contact.customer && contact.customer.length == 0">Không có</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="w-13 bg-light text-left label">Nguồn tiềm năng</td>
+                                <td class="w-23">{{contact.prospectSource?.name || 'Không có'  }}</td>
+                            </tr>
+                            <tr>
+                                <td class="w-13 bg-light text-left label">Email chính</td>
+                                <td class="w-23">
+                                    <a *ngIf="contact.email" [href]="'mailto:' + contact.email">{{contact.email}}</a>
+                                    <span *ngIf="!contact.email" >{{'Không có'}}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="w-25 bg-light text-left label">
+                                    <span>Nhóm phụ trách</span>
+                                </td>
+                                <td class="w-25">{{contact.assignToGroup && contact.assignToGroup.name || 'Không có'}}</td>
+                            </tr>
+                            <tr>
+                                <td class="w-25 bg-light text-left label">
+                                    <span>Người phụ trách</span>
+                                </td>
+                                <td class="w-25">{{contact.assignTo && contact.assignTo.name || 'Không có'}}</td>
+                            </tr>
+                            <tr>
+                                <td class="w-25 bg-light text-left label">Tỉnh/Thành phố</td>
+                                <td class="w-25">{{getLocation(contact.location, 'StateProvince') || 'Không có'}}</td>
+                            </tr>
+                            <tr>
+                                <td class="w-25 bg-light text-left label">Quốc gia</td>
+                                <td class="w-25">{{getLocation(contact.location, 'Country') || 'Không có'}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div class="d-flex">
+                        <a [routerLink]="['../spec']" class="btn btn-primary mr-auto">
+                            Hiển thị đầy đủ
+                        </a>
+                        <div class="d-flex flex-column">
+                            <span class="metadata">Ngày tạo: {{contact.createdDate | date: 'dd/MM/yyyy HH:mm'}}</span>
+                            <span *ngIf="contact.createdDate != contact.updatedDate" class="metadata">Ngày sửa: {{contact.updatedDate | date: 'dd/MM/yyyy HH:mm'}}</span>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <app-comments [moduleName]="'contact'" [moduleItemId]="contact.id" [viewMode]="'partial'"></app-comments>
+
+        </div>
+
+        <div class="col-md-5 pl-3 pr-4">
+            <app-activities [moduleName]="'contact'" [moduleItemId]="contact.id" [moduleItemName]="contact.name"></app-activities>
+            <app-audits [moduleName]="'contact'" [moduleItemId]="contact.id"></app-audits>
+        </div>
+    </div>
+</div>
+<div *ngIf="!isContactContactSummary && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin">
+    <p class="text-center">Bạn không có quyền xem dữ liệu này</p>
+</div>

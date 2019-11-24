@@ -1,0 +1,301 @@
+<div>
+
+    <div class="search-box d-flex">
+
+        <div class="media mr-auto">
+            <div class="media-header">
+                <a [routerLink]='["/opportunity"]'>
+                    <i class="fa fa-chevron-left mr-3" aria-hidden="true"></i>
+                </a>
+                <i class="fa fa-usd mr-3" aria-hidden="true"></i>
+                <h4 class="d-inline mb-0 text-dark">
+                    {{ opportunity.id > 0 ? 'Chỉnh sửa cơ hội' : 'Tạo mới cơ hội'}}
+                </h4>
+            </div>
+
+        </div>
+
+        <div class="action-bar">
+            <button class="btn btn-primary ml-2" tabindex="16" (click)="submitForm()">Lưu &nbsp;
+
+            </button>
+            <button class="btn btn-secondary ml-2" tabindex="17" [routerLink]="['/opportunity']">Hủy &nbsp;
+
+            </button>
+        </div>
+
+    </div>
+    <hr>
+    <form [formGroup]="opportunityForm" novalidate>
+
+        <div class="d-flex">
+            <div class="w-100  mr-auto">
+                <div class="card-collapse">
+                    <div class="header" (click)="isCollapsedMain = !isCollapsedMain" [attr.aria-expanded]="!isCollapsedMain"
+                        aria-controls="info-main">
+                        <i class="fa fa-caret-down mr-3"></i>Chi tiết cơ hội</div>
+                    <div class="body" id="info-main" [ngbCollapse]="isCollapsedMain">
+                        <table class="w-100 table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label required">Tên cơ hội</td>
+                                    <td class="w-25">
+                                        <input class="w-75 form-control" autofocus tabindex="1" type="text"
+                                            [class.is-invalid]="formErrors.name" formControlName="name" tabindex="1">
+                                        <div class="invalid-feedback" *ngIf="formErrors.name">
+                                            {{formErrors.name}}
+                                        </div>
+
+                                    </td>
+                                    <td class="w-25 bg-light text-right label">Ngày dự kiến xong</td>
+                                    <td class="w-25">
+                                        <div class="input-group w-75">
+                                            <owl-date-time #opportunityDateStop formControlName="opportunityDateStop"
+                                                [readonlyInput]="datePickerConfig.readonlyInput" [dateFormat]="datePickerConfig.dateFormat"
+                                                [placeHolder]="datePickerConfig.datePlaceHolder" [locale]="datePickerConfig.vi"
+                                                [type]="datePickerConfig.calendarType" [tabIndex]="'8'">
+
+                                            </owl-date-time>
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label">Tiềm năng/Khách hàng</td>
+                                    <td class="w-25">
+                                        <span class="mr-1"><input value="prospect" id="opportunity-from-prospect"
+                                                tabindex="2" type="radio" formControlName="opportunityFrom"> <label for="opportunity-from-prospect">Tiềm
+                                                năng</label></span>
+                                        <span class="ml-2 mr-1"><input value="customer" id="opportunity-from-customer"
+                                                tabindex="2" type="radio" formControlName="opportunityFrom"> <label for="opportunity-from-customer">Khách
+                                                hàng</label></span>
+                                    </td>
+                                    <td class="w-25 bg-light text-right label">Giai đoạn</td>
+                                    <td class="w-25">
+                                        <span class="custom-dropdown w-75 ">
+                                            <select class="form-control" formControlName="phase" tabindex="9">
+                                                <option [ngValue]="null">--Lựa chọn--</option>
+                                                <option *ngFor="let item of opportunityStepList | async" [value]="item.id">{{item.text}}</option>
+                                            </select>
+                                        </span>
+                                        <span class="w-25" *ngIf="isOpportunityConfigCustomerStep || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+                                            <i (click)="openModal('opportunity-steps')" class="fa fa-pencil-square ic-pencil pointer"
+                                                aria-hidden="true"></i>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label">
+                                        <span *ngIf="opportunityForm.get('opportunityFrom').value == 'prospect'">Tiềm
+                                            năng</span>
+                                        <span *ngIf="opportunityForm.get('opportunityFrom').value == 'customer'">Khách
+                                            hàng</span>
+                                    </td>
+                                    <td class="w-25">
+                                        <div class=" w-75 autocomplete-wrapper">
+                                            <p-autoComplete *ngIf="opportunityForm.get('opportunityFrom').value == 'prospect'"
+                                                formControlName="prospectCustomer" [suggestions]="prospectsSearchResults"
+                                                [forceSelection]="true" [delay]="'400'" [emptyMessage]="'Không có dữ liệu'"
+                                                placeholder="Tìm theo tên" [immutable]="true" inputStyleClass="text-truncate mw-100"
+                                                (completeMethod)="searchProspects($event.query)" [tabindex]="'3'" field="text"
+                                                dataKey="id">
+                                            </p-autoComplete>
+                                            <p-autoComplete *ngIf="opportunityForm.get('opportunityFrom').value == 'customer'"
+                                                formControlName="customer" [suggestions]="customersSearchResults"
+                                                [forceSelection]="true" [delay]="'400'" [emptyMessage]="'Không có dữ liệu'"
+                                                placeholder="Tìm theo tên" [immutable]="true" inputStyleClass="text-truncate mw-100"
+                                                (completeMethod)="searchCustomers($event.query)" [tabindex]="'3'" field="text"
+                                                dataKey="id">
+                                            </p-autoComplete>
+
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-search"></i>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="w-25 bg-light text-right label">Xác suất</td>
+                                    <td class="w-25">
+                                        <div class="input-group w-75">
+                                            <input appInputNumber type="number" min="0" max="100" class="form-control text-right"
+                                                [class.is-invalid]="formErrors.probability" formControlName="probability"
+                                                tabindex="10">
+                                            <span class="input-group-addon">%</span>
+                                        </div>
+                                        <div class="invalid-feedback" *ngIf="formErrors.probability">
+                                            {{formErrors.probability}}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label">Liên hệ</td>
+                                    <td class="w-25">
+                                        <div class=" w-75 autocomplete-wrapper-2 ui-fluid">
+                                            <p-autoComplete formControlName="contact" [suggestions]="contactsSearchResults"
+                                                [forceSelection]="true" [delay]="'400'" [emptyMessage]="'Không có dữ liệu'"
+                                                placeholder="Tìm theo tên" [immutable]="true" (completeMethod)="searchContacts($event.query)"
+                                                [tabindex]="'4'" field="text" [multiple]="true" dataKey="id">
+                                            </p-autoComplete>
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-search"></i>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="w-25 bg-light text-right label">Chiến dịch</td>
+                                    <td class="w-25">
+                                        <div class=" w-75 autocomplete-wrapper">
+                                            <p-autoComplete formControlName="campaign" [suggestions]="campaignsSearchResults"
+                                                [forceSelection]="true" [delay]="'400'" [emptyMessage]="'Không có dữ liệu'"
+                                                placeholder="Tìm theo tên" [immutable]="true" (completeMethod)="searchCampaigns($event.query)"
+                                                [tabindex]="'11'" field="text" inputStyleClass="text-truncate mw-100"
+                                                dataKey="id">
+                                            </p-autoComplete>
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-search"></i>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label">Phân loại</td>
+                                    <td class="w-25">
+                                        <span class="custom-dropdown w-75 ">
+                                            <select class="form-control" formControlName="category" tabindex="5">
+                                                <option [ngValue]="null">--Lựa chọn--</option>
+                                                <option *ngFor="let item of opportunityClassifyList | async" [value]="item.id">{{item.text}}</option>
+                                            </select>
+                                        </span>
+                                    </td>
+                                    <td class="w-25 bg-light text-right label required">Giá trị dự kiến</td>
+                                    <td class="w-25">
+                                        <input class="w-75 form-control text-right" [class.is-invalid]="formErrors.expectedValue"
+                                            appInputMoney formControlName="expectedValue" tabindex="12">
+                                        <div class="invalid-feedback" *ngIf="formErrors.expectedValue">
+                                            {{formErrors.expectedValue}}
+                                        </div>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label">Nguồn cơ hội</td>
+                                    <td class="w-25">
+                                        <span class="custom-dropdown w-75 ">
+                                            <select class="form-control" formControlName="prospectSource" tabindex="6">
+                                                <option [ngValue]="null">--Lựa chọn--</option>
+                                                <option *ngFor="let item of prospectList | async" [value]="item.id">{{item.text}}</option>
+                                            </select>
+                                        </span>
+                                        <span class="w-25" *ngIf="isOpportunityConfigCustomerResource || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+                                            <i (click)="openModal('opportunitySource')" class="fa fa-pencil-square ic-pencil pointer"
+                                                aria-hidden="true"></i>
+                                        </span>
+                                    </td>
+                                    <td class="w-25 bg-light text-right label">Kênh tiếp cận</td>
+                                    <td class="w-25">
+                                        <div class="w-75 d-inline-flex" [class.is-approachChannels-invalid]="formErrors.approachChannels">
+                                            <ng-multiselect-dropdown [placeholder]="'--Lựa chọn--'" formControlName="approachChannels"
+                                                [data]="approachChanelList" [settings]="dropdownSettings">
+                                            </ng-multiselect-dropdown>
+                                            <div></div>
+                                        </div>
+                                        <span class="w-25" *ngIf="isOpportunityConfigApproachChannel || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+                                            <i (click)="openModal('prospect-approach-channel')" class="fa fa-pencil-square ic-pencil pointer"
+                                                aria-hidden="true"></i>
+                                        </span>
+                                        <div class="invalid-feedback" *ngIf="formErrors.approachChannels">
+                                            Bạn cần chọn ít nhất 1 kênh tiếp cận
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label">Nhóm phụ trách</td>
+                                    <td class="w-25">
+                                        <span class="custom-dropdown w-75 ">
+                                            <i *ngIf="!((employeeGroupList | async)?.length > 0)" class="ui-autocomplete-loader fa fa-circle-o-notch fa-spin fa-fw ng-star-inserted mr-5"></i>
+                                            <select class="form-control" formControlName="assignToGroup" tabindex="7"
+                                                (change)="assignToGroupChange($event.target.value)">
+                                                <option [ngValue]="null">--Lựa chọn--</option>
+                                                <option *ngFor="let item of employeeGroupList | async" [value]="item.id">{{item.text}}</option>
+                                            </select>
+                                        </span>
+                                        <div class="invalid-feedback" *ngIf="formErrors.assignTo">
+                                            {{formErrors.assignTo}}
+                                        </div>
+                                    </td>
+                                    <td class="w-25 bg-light text-right label required">Model</td>
+                                    <td class="w-25">
+                                        <div class=" w-75 autocomplete-wrapper-2 ui-fluid">
+                                            <p-autoComplete [suggestions]="modelSearchList" [forceSelection]="true"
+                                                [delay]="'400'" tabindex="13" [emptyMessage]="'Không có dữ liệu'"
+                                                placeholder="Tìm theo tên" formControlName="models" [styleClass]="formErrors.models ? 'is-invalid' : ''"
+                                                [immutable]="true" (completeMethod)="searchModel($event.query)" field="text"
+                                                [multiple]="true">
+                                            </p-autoComplete>
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-search"></i>
+                                            </span>
+                                        </div>
+                                        <div class="invalid-feedback" *ngIf="formErrors.models">
+                                            Bạn cần chọn ít nhất 1 model
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label">Người phụ trách</td>
+                                    <td class="w-25">
+                                        <span class="custom-dropdown w-75 ">
+                                            <i *ngIf="!((employeeList | async)?.length > 0)" class="ui-autocomplete-loader fa fa-circle-o-notch fa-spin fa-fw ng-star-inserted mr-5"></i>
+                                            <select class="form-control" formControlName="assignTo" tabindex="7">
+                                                <option [ngValue]="null">--Lựa chọn--</option>
+                                                <option *ngFor="let item of employeeList | async" [value]="item.id">{{item.text}}</option>
+                                            </select>
+                                        </span>
+                                        <div class="invalid-feedback" *ngIf="formErrors.assignTo">
+                                            {{formErrors.assignTo}}
+                                        </div>
+                                    </td>
+                                    <td class="w-25 bg-light text-right label ">Cá nhân</td>
+                                    <td class="w-25">
+                                        <div style="display: flex; justify-content: flex-start; align-items: start">
+                                            <input type="checkbox" tabindex="13" class="w-25 form-control text-right"
+                                                formControlName="isShare">
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+                <div class="card-collapse">
+                    <div class="header" (click)="isCollapsedDesc = !isCollapsedDesc" [attr.aria-expanded]="!isCollapsedDesc"
+                        aria-controls="info-desc">
+                        <i class="fa fa-caret-down mr-3"></i>Mô tả chi tiết</div>
+                    <div class="body" id="info-desc" [ngbCollapse]="isCollapsedDesc">
+                        <table class="w-100 table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label">Mô tả</td>
+                                    <td class="w-75">
+                                        <textarea class="w-75 form-control" type="text" [class.is-invalid]="formErrors.description"
+                                            formControlName="description" tabindex="15"></textarea>
+                                        <div class="invalid-feedback" *ngIf="formErrors.description">
+                                            {{formErrors.description}}
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+</div>

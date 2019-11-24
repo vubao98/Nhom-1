@@ -1,0 +1,83 @@
+<div *ngIf="isPmsViewInfoSummaryCustomer || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">
+    <div [@routerTransition] class="row no-gutters" *ngIf="customer$ | async as customer">
+        <div class="col-md-7">
+            <div class="card mb-3">
+                <div class="card-body" id="info-main" [ngbCollapse]="isCollapsedMain">
+                    <table class="w-100 table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class="w-13 bg-light text-left label">Tên khách hàng</td>
+                                <td class="w-23">{{customer.name}}</td>
+                            </tr>
+                            <tr>
+                                <td class="w-13 bg-light text-left label">Website</td>
+                                <td class="w-23">
+                                    <a [href]="'http://' + customer.website" target="_blank" *ngIf="customer.website">{{customer.website}}</a>
+                                    <span *ngIf="!customer.website">Không có</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="w-13 bg-light text-left label">Fax</td>
+                                <td class="w-23">{{customer.fax || 'Không có'}}</td>
+                            </tr>
+                            <tr>
+                                <td class="w-13 bg-light text-left label">Điện thoại chính</td>
+                                <td class="w-23">
+                                    <span *ngIf="customer.phoneNumberOfficial" appPhoneNumberCallable>{{customer.phoneNumberOfficial}}</span>
+                                    <span  *ngIf="!customer.phoneNumberOfficial">Không có</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="w-13 bg-light text-left label">Mã số thuế</td>
+                                <td class="w-23">{{customer.taxCode || 'Không có'}}</td>
+                            </tr>
+                            <tr>
+                                <td class="w-13 bg-light text-left label">Email chính</td>
+                                <td class="w-23">
+                                    <a [href]="'mailto:' + customer.emailOfficial" *ngIf="customer.emailOfficial">{{customer.emailOfficial}}</a>
+                                    <span *ngIf="!customer.emailOfficial">Không có</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="w-25 bg-light text-left label">
+                                    <span>Nhóm phụ trách</span>
+                                </td>
+                                <td class="w-25">{{(customer.assignToGroup && customer.assignToGroup.name) || 'Không có'}}</td>
+                            </tr>
+                            <tr>
+                                <td class="w-25 bg-light text-left label">
+                                    <span>Người phụ trách</span>
+                                </td>
+                                <td class="w-25">{{(customer.assignTo && customer.assignTo.name) || 'Không có'}}</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div class="d-flex">
+                        <a [routerLink]="['../spec']" class="btn btn-primary mr-auto">
+                            Hiển thị đầy đủ
+                        </a>
+                        <div class="d-flex flex-column">
+                            <span class="metadata">Ngày tạo: {{customer.createdDate | date: 'dd/MM/yyyy HH:mm'}}</span>
+                            <span class="metadata" [class.d-none]="customer.createdDate==customer.updatedDate">Ngày sửa: {{customer.updatedDate | date: 'dd/MM/yyyy HH:mm'}}</span>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <app-comments [moduleName]="'customer'" [moduleItemId]="customer.id" [viewMode]="'partial'" [addComment]="isPmsAddCommentCustomer" [viewComment]="isPmsViewCommentCustomer"></app-comments>
+        </div>
+
+        <div class="col-md-5 pl-3 pr-4">
+            <app-activities [moduleName]="'customer'" [moduleItemId]="customer.id" [moduleItemName]="customer.name" [viewActivities]="isPmsViewActivityCustomer"></app-activities>
+            <app-audits [moduleName]="'customer'" [moduleItemId]="customer.id" [viewAudit]="isPmsViewHistoryCustomer"></app-audits>
+            <app-list-contact [customerId]="customer.id" [customerName]="customer.name + ' - ' + customer.phoneNumberOfficial"></app-list-contact>
+        </div>
+
+    </div>
+</div>
+<div *ngIf="!isPmsViewInfoSummaryCustomer && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin">
+    <p class="text-center">Bạn không có quyền xem dữ liệu này</p>
+</div>

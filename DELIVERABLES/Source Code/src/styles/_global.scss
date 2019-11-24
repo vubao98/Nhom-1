@@ -1,0 +1,166 @@
+.btn-secondary {
+    color: #fff;
+    &:hover {
+        color: #fff;
+    }
+}
+
+.type-task{
+    color:#ff6b81;
+    a{
+        color: #ff6b81;
+       } 
+       a:hover{
+           color:#478993;
+       }
+}
+.type-event{
+    color:#2ed573;
+    a{
+        color: #2ed573;
+       } 
+       a:hover{
+           color:#478993;
+       }
+}
+
+.btn{
+    cursor: pointer;
+}
+
+.table {
+    th,
+    td {
+        vertical-align: middle;
+        padding: 0.5rem 0.8rem;
+        
+    }
+}
+
+form {
+    table {
+        td {
+            padding: 0.4rem 0.5rem !important;
+
+        }
+    }
+
+    .required:after {
+        content: "*";
+        color: red;
+        font-style: italic;
+    }
+}
+
+th, td {
+    word-break: break-word;
+}
+
+.search-box {
+    .input-group {
+        width: auto;
+        border-color: $primary;
+        .input-group-addon {
+            background: $primary;
+            border-color: $primary;
+            color: #fff;
+        }
+        .form-control {
+            border-color: $primary;
+        }
+    }
+    .media{
+        width: 33%;
+    }
+}
+
+.filter-bar{
+    background-color: #fafbfc;
+    margin: 1rem 0;
+    border: 1px solid #ededee;
+    .form-label{
+        font-weight: 700;
+    }
+    .form-control{
+        width: 145px;
+    }
+    label {
+        font-size: .65rem;
+        padding-bottom: .25rem;
+        padding-top: .5rem;
+    }
+    padding: 0 1rem;
+    padding-bottom: .5rem;
+
+    select {
+        height: 1.875rem !important;
+        padding: 0 0.75rem;
+    }
+
+    input, button, .owl-dateTime .owl-datetime-main-input {
+        height: 1.875rem !important;
+    }
+}
+
+.mark-status {
+    padding: 4px;
+    border-radius: 5px;
+    color: white;
+    width: 100%!important;
+    text-align: center;
+}
+
+.ng2-tag-input__text-input {
+    margin-top: 1px;
+}
+
+.minimal {
+    opacity: 1 !important;
+    margin-top: 4px;
+    tag {
+        background-color: lightgray !important;
+    }
+}
+
+.table-responsive {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    &::-webkit-scrollbar-thumb {
+        background: #c1c1c1; 
+    }
+    &::-webkit-scrollbar {
+        height: 8px;
+    }
+}
+
+.dataTables_empty {
+    display: none !important;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.spinner-three-bounce {
+    top: 3rem !important;
+}
+
+body {
+    overflow: overlay;
+}
+
+.btn-clear-search {
+    position: absolute;
+    right: 0.25rem;
+    z-index: 5;
+    top: .6rem;
+    cursor: pointer;
+}
+  
+.search-input {
+    border-top-right-radius: .25rem !important;
+    border-bottom-right-radius: .25rem !important;
+}
+
+.ui-autocomplete-loader--custom {
+    margin-right: 2.25rem;
+}

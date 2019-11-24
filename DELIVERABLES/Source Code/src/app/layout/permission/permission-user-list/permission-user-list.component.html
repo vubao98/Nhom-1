@@ -1,0 +1,244 @@
+<div [@routerTransition]>
+    <div class="search-box d-flex">
+        <h5 class="mr-auto d-flex align-items-end">Danh sách nhóm người dùng</h5>
+        <div class="input-group" [class.d-none]="!isPmsViewGroupList && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin">
+            <span class="input-group-addon">Tìm kiếm theo</span>
+            <input type="text" class="form-control" placeholder="Tên, mô tả" (keyup)="searchTerm$.next($event.target.value)">
+        </div>
+
+        <button *ngIf="isPmsAddGroup || groupRole == userGroupRole.SuperAdmin" class="btn btn-primary ml-2" (click)="openPopupCreate(createUserGroupModal)">
+            <i class="fa fa-plus" aria-hidden="true"></i>&nbsp; Thêm mới nhóm người dùng</button>
+        <button *ngIf="isPmsDeleteGroup || groupRole == userGroupRole.SuperAdmin" class="btn btn-primary ml-2" (click)="multiDelete()">
+            <i class="fa fa-trash-o" aria-hidden="true"></i>
+        </button>
+        <button class="btn btn-primary ml-2" (click)="refresh(true)">
+            <i class="fa fa-refresh" aria-hidden="true"></i>
+        </button>
+    </div>
+
+    <div class="mt-4 b-pin-col-wrapper" [class.d-none]="!isPmsViewGroupList && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin">
+        <div class="b-pin-col-scroller" #wrap1 (scroll)="syncScroll1(wrap1, wrap2)">
+            <table class="b-pin-col-table table" #tablePin>
+                <thead class="table-active">
+                    <tr>
+                        <th class="text-center w-60 b-pin-col-sticky-col th-stt-pad">
+                            <div class="d-flex justify-content-center align-items-center h-100">
+                                <span class="align-middle">
+                                    <label class="custom-control custom-checkbox stt-checkbox--mar mb-0">
+                                        <input type="checkbox" class="custom-control-input" [(ngModel)]=checkboxSeclectAll (change)="onSelectAll($event.target.checked)">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </span>
+                                <span class="ml-2">STT</span>
+                            </div>
+                        </th>
+                        <th class="mw-100 align-middle">Tên nhóm</th>
+                        <th class="mw-100 align-middle">Mô tả</th>
+                        <th class="mw-100 align-middle">Chi nhánh</th>
+                        <th class="mw-100 align-middle">Ngày tạo</th>
+                        <th class="mw-100 align-middle">Trạng thái</th>
+                        <th class="table-action b-pin-col-sticky-col-right text-center">Thao tác</th>
+                    </tr>
+                </thead>
+                <!-- {{item.canBeModify}} -->
+                <tbody>
+                    <tr *ngFor="let item of pagedResult.items; let i = index" appRowHover>
+                        <td class="text-center b-pin-col-sticky-col w-60">
+                            <div class="d-flex align-items-center h-100">
+                                <span>
+                                    <label class="custom-control custom-checkbox stt-checkbox--mar mb-0">
+                                        <!-- không dc xóa group SuperAdmin, chỉ SuperAdmin mới dc xóa Admin -->
+                                        <input type="checkbox" [attr.disabled]="item.role == userGroupRole.SuperAdmin ? '' : (item.role == userGroupRole.Admin ? groupRole == userGroupRole.SuperAdmin ? null : '' : null)" class="custom-control-input" [(ngModel)]="item.checkboxSelected">
+                                        <span class="custom-control-indicator"></span>
+                                    </label>
+                                </span>
+                                <span class="ml-2">
+                                    {{i + pagedResult.currentPage * pagedResult.pageSize + 1}}
+
+                                </span>
+                            </div>
+                        </td>
+                        <td class="text-hyperlink mw-12rem text-ellipsis" (click)="viewUserGroup(item.id, createUserGroupModal)">{{item.name}}</td>
+                        <td class="mw-12rem table-td--wrap text-ellipsis">{{item.description || 'Không có'}}</td>
+                        <td>{{item.branch?.name || 'Không có'}}</td>
+                        <td>{{item.createdDate | date: 'dd/MM/yyyy'}}</td>
+                        <td>{{item.role == userGroupRole.SuperAdmin || item.role == userGroupRole.Admin ? 'Đã phân quyền' : item.isPermission ? 'Đã phân quyền' : 'Chưa phân quyền'}}</td>
+                        <td class="b-pin-col-sticky-col-right">
+                            <div class="d-flex justify-content-center align-items-center h-100">
+                                <a class="pointer" (click)="viewUserGroup(item.id, createUserGroupModal)">
+                                    <i class="fa fa-eye text-warning cursor-pointer" aria-hidden="true"></i>
+                                </a>
+
+                                <a (click)="editUserGroup(item.id, createUserGroupModal)" class=" text-success ml-3" [class.invisible]="getPmsEditGroupByRole(item.role)">
+                                    <i class="fa fa-pencil cursor-pointer" aria-hidden="true"> </i>
+                                </a>
+                                <a class="text-info ml-3 pointer" [routerLink]="['../setting', item.id]" [class.invisible]="item.role == userGroupRole.SuperAdmin || item.role == userGroupRole.Admin ? true : groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin ? false : isPmsPermissionGroup ? false : true">
+                                    <i class="fa fa-cogs" aria-hidden="true"></i>
+                                </a>
+                                <a (click)="delete(item.id)" class="text-dark ml-3" [class.invisible]="item.role == userGroupRole.SuperAdmin ? true : item.role == userGroupRole.Admin ? groupRole == userGroupRole.SuperAdmin ? false : true : groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin ? false : isPmsDeleteGroup ? false : true">
+                                    <i class="fa fa-trash-o cursor-pointer" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="text-center pt-3" *ngIf="pagedResult && pagedResult.items && pagedResult.items.length === 0">Không có dữ liệu</p>
+    </div>
+    <div class="scrollbar-fake" [class.d-none]="!isPmsViewGroupList && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin" #wrap2 (scroll)="syncScroll2(wrap1, wrap2)">
+        <div class="scrollbar-fake-content" #fakeScrollBar></div>
+    </div>
+
+    <app-pagination [class.d-none]="!isPmsViewGroupList && groupRole != userGroupRole.SuperAdmin && groupRole != userGroupRole.Admin" [pagedResult]="pagedResult" (pagedResultChange)="pagedResultChange($event)"></app-pagination>
+
+    <div class="text-center" [class.d-none]="isPmsViewGroupList || groupRole == userGroupRole.SuperAdmin || groupRole == userGroupRole.Admin">Bạn không có quyền xem dữ liệu này</div>
+</div>
+
+<div bsModal #createUserGroupModal="bs-modal" (onHide)="modalHide()" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title pull-left">
+                    <span *ngIf="action == 'create'">Tạo mới nhóm người dùng</span>
+                    <span *ngIf="action == 'view'">Nhóm {{userGroupCreate.name}}</span>
+                    <span class="text--word-break" *ngIf="action == 'edit'">Cập nhật nhóm {{userGroupCreate.name}}</span>
+                </div>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="createUserGroupModal.hide()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-4">
+                <form #userGroupForm="ngForm">
+                    <div class="row">
+                        <div class="col-md-2" [class.required]="action != 'view'">Tên</div>
+                        <div class="col-md-10">
+                            <input class="form-control input--disabled" required #userGroupName="ngModel" [attr.disabled]="action != 'view' ? null : ''"
+                                [class.is-invalid]="isSubmit && userGroupName.errors?.required" [(ngModel)]="userGroupCreate.name"
+                                name="name">
+                            <p class="text-err" *ngIf="isSubmit && userGroupName.errors?.required">Trường này là bắt buộc
+                            </p>
+                            <p class="text-err" *ngIf="isSubmit && userGroupCreate.name && userGroupCreate.name.trim().length > 50">Trường này không được nhiều hơn 50 ký tự</p>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-2">Mô tả</div>
+                        <div class="col-md">
+                            <textarea class="form-control input--disabled" #userGroupDesc="ngModel" [(ngModel)]="userGroupCreate.description" [attr.disabled]="action != 'view' ? null : ''"
+                                name="desc"></textarea>
+                            <p class="text-err" *ngIf="isSubmit && userGroupCreate.description && userGroupCreate.description.trim().length > 200">Trường này không được nhiều hơn 200 ký tự</p>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-2 text-nowrap">Chi nhánh</div>
+                        <div class="col-md">
+                            <span class="custom-dropdown w-100">
+                                <select class="form-control" #userBranch="ngModel" (change)="getEmployeeByBranch($event.target.value)" [(ngModel)]="userGroupCreate.branch && userGroupCreate.branch.id"
+                                    name="branch" tabindex="6">
+                                    <option *ngFor="let item of branches | async" [value]="item.id">{{item.text}}</option>
+                                </select>
+                            </span>
+                        </div>
+                    </div>
+                    <div *ngIf="action != 'view'" class="mt-3 required">Vui lòng chọn nhân viên thuộc nhóm</div>
+                    <div *ngIf="action == 'view'" class="mt-3 row">
+                        <div class="offset-md-2 col-md">
+                            <div class="p-2 item-selector-grid--title">Danh sách nhân viên</div>
+                            <div class="p-2 item-selector-grid--item-list">
+                                <div class="item-selector-grid--search-box">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                    <input class="pb-1" (keyup)="employeeViewSearchTerm$.next($event.target.value)" placeholder="Tên nhân viên">
+                                </div>
+                                <div class="item-selector-grid--item-list-div pt-2">
+                                    <p class="text-center" *ngIf="userGroupMemberViewList && userGroupMemberViewList.length === 0">Không có dữ liệu</p>
+                                    <p *ngFor="let e of userGroupMemberViewList">{{e.name}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="action != 'view'" class="mt-3 item-selector-grid">
+                        <div>
+                            <div class="p-2 item-selector-grid--title">Danh sách nhân viên</div>
+                            <div class="p-2 item-selector-grid--item-list">
+                                <div class="item-selector-grid--search-box">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                    <input (keyup)="employeeSearchTerm$.next($event.target.value)" class="pb-1" placeholder="Tên nhân viên">
+                                </div>
+                                <div class="item-selector-grid--item-list-div pt-2 position-relative">
+                                    <ngx-loading [show]="loading"></ngx-loading>
+                                    <p class="text-center" *ngIf="employeeSearchList && employeeSearchList.length === 0 && !loading">Không có dữ liệu</p>
+                                    <p [class.text-linethrough]="e.transfered" *ngFor="let e of employeeSearchList" class="center-align-items">
+                                        <label class="custom-control custom-checkbox mb-0 pr-3">
+                                            <input type="checkbox" [attr.disabled]="e.transfered ? '' : null" [(ngModel)]="e.checkboxSelected" [ngModelOptions]="{standalone: true}"
+                                                class="custom-control-input">
+                                            <span class="custom-control-indicator"></span>
+                                        </label>
+                                        {{e.text}}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="position-relative">
+                            <div class="group-btn-center-midle">
+                                <div class="text-center">
+                                    <i class="fa fa-angle-double-right pointer" (click)="transferAllSelectedData()" aria-hidden="true"></i>
+                                </div>
+                                <div class="text-center">
+                                    <i class="fa fa-angle-right mt-2 pointer" (click)="transferSelectedData()" aria-hidden="true"></i>
+                                </div>
+                                <div class="text-center">
+                                    <i class="fa fa-angle-left mt-2 pointer" (click)="unTransferSelectedData()" aria-hidden="true"></i>
+                                </div>
+                                <div class="text-center">
+                                    <i class="fa fa-angle-double-left mt-2 pointer" (click)="unTransferAllSelectedData()" aria-hidden="true"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="p-2 item-selector-grid--title">Nhân viên đã chọn</div>
+                            <div class="p-2 item-selector-grid--item-list" [class.is-invalid]="isSubmit && employeeSelectedList.length == 0">
+                                <div class="item-selector-grid--item-list-selected">
+                                    <p *ngFor="let e of employeeSelectedList" class="center-align-items">
+                                        <label class="custom-control custom-checkbox mb-0 pr-3">
+                                            <input type="checkbox" [(ngModel)]="e.checkboxSelected" [ngModelOptions]="{standalone: true}" class="custom-control-input">
+                                            <span class="custom-control-indicator"></span>
+                                        </label>
+                                        {{e.text}}
+                                    </p>
+                                </div>
+                            </div>
+                            <p class="text-err" *ngIf="isSubmit && employeeSelectedList.length == 0">Truờng này là bắt buộc
+                            </p>
+                        </div>
+                    </div>
+                    <div class="mt-3 form-group d-flex justify-content-between">
+                        <div class="form-check" *ngIf="userGroupCreate.role == userGroupRole.SuperAdmin">
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input custom-control-input--disabled" disabled checked>
+                                <span class="custom-control-indicator"></span>
+                            </label>
+                            Nhóm này là Super Admin
+                        </div>
+                        <div class="form-check center-align-items" *ngIf="userGroupCreate.role != userGroupRole.SuperAdmin">
+                            <label class="custom-control custom-checkbox mb-0 pr-3">
+                                <input type="checkbox" class="custom-control-input custom-control-input--disabled" (click)="setAdmin()" [attr.disabled]="action != 'view' && groupRole == userGroupRole.SuperAdmin ? null : ''" [checked]="userGroupCreate.role == userGroupRole.Admin">
+                                <span class="custom-control-indicator"></span>
+                            </label>
+                            Nhóm này là Admin
+                        </div>
+                        <div class="text-right">
+                            <button type="button" *ngIf="action != 'view'" class="btn btn-primary"
+                                (click)="createOrEditUserGroup(createUserGroupModal)">Lưu</button>
+                            <button type="button" *ngIf="action == 'view' && userGroupCreate.canBeModify && isPmsEditGroup"
+                                class="btn btn-primary" (click)="editUserGroup()">Chỉnh sửa
+                            </button>
+                            <button type="button" class="btn btn-secondary ml-2" (click)="cancelPopup(createUserGroupModal)"
+                                *ngIf="userGroupCreate.canBeModify && isPmsEditGroup">Hủy</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.7)" size="medium" color="#fff" type="ball-clip-rotate-multiple"></ngx-spinner>

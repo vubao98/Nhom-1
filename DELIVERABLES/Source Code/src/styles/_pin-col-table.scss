@@ -1,0 +1,122 @@
+/* table pin col */
+.b-pin-col-table {
+    border: none;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 0;
+
+    thead th {
+        background-color: #ebebeb;
+        border: none;
+        font-weight: bold;
+        padding: .5rem .75rem;
+        white-space: nowrap;
+        height: 2rem;
+        border-bottom: 1px solid #dddddd;
+
+        &:first-child, &:last-child {
+            height: calc(2rem + 4px);
+        }
+    }
+
+    tbody {
+        tr {
+            &:hover {
+                background-color: whitesmoke;
+            }
+        }
+
+        td {
+            color: #333;
+            padding: 0 10px;
+            white-space: nowrap;
+            height: 2rem;
+            border-top: 1px solid #eaebeb;
+            max-width: 12rem;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+    }
+
+    .b-pin-col-sticky-col {
+        border-right: solid 1px #dadada;
+        left: 0;
+        position: absolute;
+        top: auto;
+        width: 60px;
+    }
+
+    .b-pin-col-sticky-col-right {
+        border-left: solid 1px #dadada;
+        right: 0;
+        position: absolute;
+        top: auto;
+        width: 120px;
+    }
+
+    .custom-checkbox {
+        margin-left: 1.5rem;
+        margin-top: .4rem;
+    }
+}
+
+.b-pin-col-wrapper {
+    position: relative;
+    max-height: calc(100vh - 335px);
+    min-height: 5rem;
+    overflow-x: scroll;
+    box-shadow: inset 0px 0px 4px 0px hsla(0, 0%, 0%, .2);
+
+    &::-webkit-scrollbar {
+        width: 6px;
+        height: 0px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+    }
+}
+
+.b-pin-col-scroller {
+    margin-left: 60px;
+    margin-right: 120px;
+    overflow-x: scroll;
+    overflow-y: visible;
+
+    &::-webkit-scrollbar {
+        height: 0px !important;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+    }
+}
+
+.scrollbar-fake {
+    height: 8px;
+    margin-left: 60px;
+    margin-right: 120px;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+        height: 8px !important;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #c1c1c1 !important;
+    }
+
+    .scrollbar-fake-content {
+        height: 8px !important;
+    }
+}
+
+// .odd, .table-striped tbody tr:nth-of-type(odd) {
+//     background-color: #fafbfc;
+// }
+
+// .table-hover tbody tr:hover {
+//     background-color: #f1f1f1 ;
+// }
+
+/* table pin col */

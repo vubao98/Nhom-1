@@ -1,0 +1,411 @@
+<div>
+    <div class="search-box d-flex">
+        <div class="media mr-auto">
+            <div class="media-header">
+                <a [routerLink]='["/contact"]'>
+                    <i class="fa fa-chevron-left mr-3" aria-hidden="true"></i>
+                </a>
+                <i class="fa fa-user-circle-o mr-3" aria-hidden="true"></i>
+                <h4 class="d-inline mb-0 text-dark">{{ contact.id > 0 ? 'Chỉnh sửa liên hệ' : 'Tạo mới liên hệ'}}</h4>
+            </div>
+
+        </div>
+
+        <div class="action-bar">
+            <button class="btn btn-primary ml-2" tabindex="31" (click)="submitForm()">Lưu &nbsp;
+
+            </button>
+            <button class="btn btn-secondary ml-2" tabindex="32" [routerLink]="['/contact']">Hủy &nbsp;
+
+            </button>
+        </div>
+
+    </div>
+    <hr>
+
+    <form [formGroup]="contactForm">
+        <div class="d-flex">
+            <div class="w-100  mr-auto">
+                <div class="card-collapse">
+                    <div class="header" (click)="isCollapsedMain = !isCollapsedMain" [attr.aria-expanded]="!isCollapsedMain"
+                        aria-controls="info-main">
+                        <i class="fa fa-caret-down mr-3"></i>Chi tiết liên hệ</div>
+                    <div class="body" id="info-main" [ngbCollapse]="isCollapsedMain">
+                        <table class="w-100 table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label">Danh xưng</td>
+                                    <td class="w-25">
+                                        <span class="custom-dropdown w-75 ">
+                                            <select class="form-control" autofocus formControlName="salutation"
+                                                tabindex="1">
+                                                <option [ngValue]="null">--Lựa chọn--</option>
+                                                <option *ngFor="let item of salutationList | async" [value]="item.id">{{item.text}}</option>
+                                            </select>
+                                        </span>
+                                    </td>
+                                    <td class="w-25 bg-light text-right label">Điện thoại phòng</td>
+                                    <td class="w-25">
+                                        <input appInputNumber class="w-75 form-control" type="text" [class.is-invalid]="formErrors.companyPhone"
+                                            formControlName="companyPhone" tabindex="10">
+                                        <div class="invalid-feedback" *ngIf="formErrors.companyPhone">
+                                            {{formErrors.companyPhone}}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label required">Họ và tên</td>
+                                    <td class="w-25">
+                                        <input class="w-75 form-control" type="text" formControlName="name"
+                                            [class.is-invalid]="formErrors.name" tabindex="2">
+                                        <div class="invalid-feedback" *ngIf="formErrors.name">
+                                            {{formErrors.name}}
+                                        </div>
+                                    </td>
+                                    <td class="w-25 bg-light text-right label">Điện thoại di động</td>
+                                    <td class="w-25">
+                                        <input appInputNumber class="w-75 form-control" type="text" [class.is-invalid]="formErrors.mobilePhone"
+                                            formControlName="mobilePhone" tabindex="11">
+                                        <div class="invalid-feedback" *ngIf="formErrors.mobilePhone">
+                                            {{formErrors.mobilePhone}}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label">Ngày sinh</td>
+                                    <td class="w-25">
+                                        <div class="input-group w-75">
+                                            <owl-date-time formControlName="dateOfBirth" [readonlyInput]="datePickerConfig.readonlyInput"
+                                                [dateFormat]="datePickerConfig.dateFormat" [placeHolder]="datePickerConfig.datePlaceHolder"
+                                                [locale]="datePickerConfig.vi" [max]="datePickerConfig.currentDate"
+                                                [type]="datePickerConfig.calendarType" [tabIndex]="'4'">
+
+                                            </owl-date-time>
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+
+                                        </div>
+                                    </td>
+                                    <td class="w-25 bg-light text-right label">Điện thoại nhà riêng</td>
+                                    <td class="w-25">
+                                        <input appInputNumber class="w-75 form-control" type="text" [class.is-invalid]="formErrors.homePhone"
+                                            formControlName="homePhone" tabindex="12">
+                                        <div class="invalid-feedback" *ngIf="formErrors.homePhone">
+                                            {{formErrors.homePhone}}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label">Khách hàng</td>
+                                    <td class="w-25">
+                                        <div class=" w-75 autocomplete-wrapper-2 ui-fluid">
+                                            <p-autoComplete formControlName="customer" [suggestions]="customersSearchResults"
+                                                [forceSelection]="true" [delay]="'400'" [emptyMessage]="'Không có dữ liệu'"
+                                                placeholder="Nhập tên khách hàng" [immutable]="true" (completeMethod)="searchCustomers($event.query)"
+                                                field="text" dataKey="id" [multiple]="true" [tabindex]="'5'">
+
+                                            </p-autoComplete>
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-search"></i>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="w-25 bg-light text-right label">Điện thoại phụ</td>
+                                    <td class="w-25">
+                                        <input appInputNumber class="w-75 form-control" type="text" [class.is-invalid]="formErrors.extraPhone"
+                                            formControlName="extraPhone" tabindex="13">
+                                        <div class="invalid-feedback" *ngIf="formErrors.extraPhone">
+                                            {{formErrors.extraPhone}}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label">Chức danh</td>
+                                    <td class="w-25">
+                                        <input class="w-75 form-control" type="text" formControlName="jobTitle"
+                                            tabindex="7">
+                                    </td>
+                                    <td class="w-25 bg-light text-right label">Trợ lý</td>
+                                    <td class="w-25">
+                                        <input class="w-75 form-control" type="text" formControlName="assistant"
+                                            tabindex="6">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label">Phòng ban</td>
+                                    <td class="w-25">
+                                        <input class="w-75 form-control" type="text" formControlName="department"
+                                            tabindex="8">
+                                    </td>
+                                    <td class="w-25 bg-light text-right label">Điện thoại trợ lý</td>
+                                    <td class="w-25">
+                                        <input appInputNumber class="w-75 form-control" type="text" [class.is-invalid]="formErrors.assistantPhone"
+                                            formControlName="assistantPhone" tabindex="15">
+                                        <div class="invalid-feedback" *ngIf="formErrors.assistantPhone">
+                                            {{formErrors.assistantPhone}}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label">Nhóm phụ trách</td>
+                                    <td class="w-25">
+                                        <span class="custom-dropdown w-75 ">
+                                            <i *ngIf="!((employeeGroupList | async)?.length > 0)" class="ui-autocomplete-loader fa fa-circle-o-notch fa-spin fa-fw ng-star-inserted mr-5"></i>
+                                            <select class="form-control" [class.is-invalid]="formErrors.assignTo" formControlName="assignToGroup" (change)="assignToGroupChange($event.target.value)" tabindex="9">
+                                                <option [ngValue]="null">--Lựa chọn--</option>
+                                                <option *ngFor="let item of employeeGroupList | async" [value]="item.id">{{item.text}}</option>
+                                            </select>
+                                        </span>
+                                        <div class="invalid-feedback" *ngIf="formErrors.assignTo">
+                                            {{formErrors.assignTo}}
+                                        </div>
+                                    </td>
+                                    <td class="w-25 bg-light text-right label">Email</td>
+                                    <td class="w-25">
+                                        <input class="w-75 form-control" type="text" [class.is-invalid]="formErrors.email"
+                                            formControlName="email" tabindex="16">
+                                        <div class="invalid-feedback" *ngIf="formErrors.email">
+                                            {{formErrors.email}}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label">Người phụ trách</td>
+                                    <td class="w-25">
+                                        <span class="custom-dropdown w-75 ">
+                                            <i *ngIf="!((employeeList | async)?.length > 0)" class="ui-autocomplete-loader fa fa-circle-o-notch fa-spin fa-fw ng-star-inserted mr-5"></i>
+                                            <select class="form-control" [class.is-invalid]="formErrors.assignTo" formControlName="assignTo" tabindex="9">
+                                                <option [ngValue]="null">--Lựa chọn--</option>
+                                                <option *ngFor="let item of employeeList | async" [value]="item.id">{{item.text}}</option>
+                                            </select>
+                                        </span>
+                                        <div class="invalid-feedback" *ngIf="formErrors.assignTo">
+                                            {{formErrors.assignTo}}
+                                        </div>
+                                    </td>
+                                    <td class="w-25 bg-light text-right label">Nguồn tiềm năng</td>                                    
+                                    <td class="w-25">
+                                        <span class="custom-dropdown w-75 ">
+                                            <select class="form-control" formControlName="prospectSource" tabindex="17">
+                                                <option *ngFor="let item of prospectSourceList | async" [value]="item.id">{{item.text}}</option>
+                                            </select>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+                <div class="card-collapse">
+                    <div class="header" (click)="isCollapsedAddress = !isCollapsedAddress" [attr.aria-expanded]="!isCollapsedAddress"
+                        aria-controls="info-address">
+                        <i class="fa fa-caret-down mr-3"></i>Chi tiết địa chỉ</div>
+                    <div class="body" id="info-address" [ngbCollapse]="isCollapsedAddress">
+                        <table class="w-100 table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label">Địa chỉ</td>
+                                    <td class="w-25">
+                                        <input class="w-75 form-control" type="text" formControlName="address" tabindex="22">
+                                    </td>
+                                    <td class="w-25 bg-light text-right label">Địa chỉ khác </td>
+                                    <td class="w-25">
+                                        <input class="w-75 form-control" type="text" formControlName="otherAddress"
+                                            tabindex="26">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label">Quốc gia</td>
+                                    <td class="w-25">
+                                        <!-- <input class="w-75 form-control" type="text" formControlName="country" tabindex="23"> -->
+                                        <span class="custom-dropdown w-75">
+                                            <select class="form-control" formControlName="country" tabindex="23">
+                                                <option class="font-weight-bold text-dark mt-2" [ngValue]="null"
+                                                    disabled>--Lựa chọn--
+                                                </option>
+                                                <option value="1">Việt Nam</option>
+                                            </select>
+                                        </span>
+                                    </td>
+                                    <td class="w-25 bg-light text-right label">Quốc gia khác </td>
+                                    <td class="w-25">
+                                        <!-- <input class="w-75 form-control" type="text" formControlName="otherCountry"
+                                            tabindex="27"> -->
+                                        <span class="custom-dropdown w-75">
+                                            <select class="form-control" formControlName="otherCountry" tabindex="27">
+                                                <option class="font-weight-bold text-dark mt-2" [ngValue]="null"
+                                                    disabled>--Lựa chọn--
+                                                </option>
+                                                <option value="1">Việt Nam</option>
+                                            </select>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label">Tỉnh/Thành phố</td>
+                                    <td class="w-25">
+                                        <!-- <input class="w-75 form-control" type="text" formControlName="city" tabindex="24"> -->
+                                        <span class="custom-dropdown w-75 ">
+                                            <select class="form-control" formControlName="city" tabindex="24" (change)="selectCity($event.target.value)">
+                                                <option class="font-weight-bold text-dark mt-2" [ngValue]="null"
+                                                    disabled>--Lựa chọn--</option>
+                                                <option *ngFor="let item of provinceList" [value]="item.id">{{item.name}}</option>
+                                            </select>
+                                        </span>
+                                    </td>
+                                    <td class="w-25 bg-light text-right label">Tỉnh/Thành phố khác</td>
+                                    <td class="w-25">
+                                        <!-- <input class="w-75 form-control" type="text" formControlName="otherCity"
+                                            tabindex="28"> -->
+                                        <span class="custom-dropdown w-75 ">
+                                            <select class="form-control" formControlName="otherCity" tabindex="28"
+                                                (change)="selectOtherCity($event.target.value)">
+                                                <option class="font-weight-bold text-dark mt-2" [ngValue]="null"
+                                                    disabled>--Lựa chọn--</option>
+                                                <option *ngFor="let item of provinceList" [value]="item.id">{{item.name}}</option>
+                                            </select>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label">Quận/huyện</td>
+                                    <td class="w-25">
+                                        <!-- <input class="w-75 form-control" type="text" formControlName="district"
+                                            tabindex="25"> -->
+                                        <span class="custom-dropdown w-75">
+                                            <select class="form-control" formControlName="district" tabindex="25">
+                                                <option class="font-weight-bold text-dark mt-2" [ngValue]="null"
+                                                    disabled>--Lựa chọn--</option>
+                                                <option *ngFor="let item of selectedProvince?.districts" [value]="item.id">{{item.name}}</option>
+                                            </select>
+                                        </span>
+                                    </td>
+                                    <td class="w-25 bg-light text-right label">Quận/huyện khác</td>
+                                    <td class="w-25">
+                                        <!-- <input class="w-75 form-control" type="text" formControlName="otherDistrict"
+                                            tabindex="29"> -->
+                                        <span class="custom-dropdown w-75">
+                                            <select class="form-control" formControlName="otherDistrict" tabindex="29">
+                                                <option class="font-weight-bold text-dark mt-2" [ngValue]="null"
+                                                    disabled>--Lựa chọn--</option>
+                                                <option *ngFor="let item of selectedOtherProvince?.districts" [value]="item.id">{{item.name}}</option>
+                                            </select>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+                <div class="card-collapse">
+                    <div class="header" (click)="isCollapsedDesc = !isCollapsedDesc" [attr.aria-expanded]="!isCollapsedDesc"
+                        aria-controls="info-desc">
+                        <i class="fa fa-caret-down mr-3"></i>Mô tả chi tiết</div>
+                    <div class="body" id="info-desc" [ngbCollapse]="isCollapsedDesc">
+                        <table class="w-100 table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label">Mô tả</td>
+                                    <td class="w-75">
+                                        <textarea class="w-75 form-control" type="text" formControlName="description"
+                                            tabindex="30"></textarea>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+                <div class="card-collapse">
+                    <div class="header" (click)="isCollapseAvatar = !isCollapseAvatar" [attr.aria-expanded]="!isCollapseAvatar"
+                        aria-controls="info-desc">
+                        <i class="fa fa-caret-down mr-3"></i>Hình ảnh liên hệ</div>
+                    <div class="body" id="info-desc" [ngbCollapse]="isCollapseAvatar">
+                        <table class="w-100 table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td class="w-25 bg-light text-right label">Mô tả</td>
+                                    <td class="w-75">
+                                        <div class="avatar-photo">
+                                            <div class="user-info__photo">
+                                                <div class="user-info__photo-remove-btn" *ngIf="!isDefaultAvatar">
+                                                    <a (click)="clearAvatar()" title="Xóa hình">
+                                                        <i class="fa fa-times"></i>
+                                                    </a>
+                                                </div>
+                                                <img class="w-100" [src]="avatarSrc" alt="Hình đại diện" />
+                                                <div class="user-info__photo-change-btn w-100">
+                                                    <input class="w-100" id="upload-photo" (click)="openAvatarModal()"
+                                                        accept="image/*" />
+                                                    <label for="upload-photo">
+                                                        <a>
+                                                            <i class="fa fa-upload"></i>
+                                                            &nbsp;Thay đổi hình
+                                                        </a>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+<!-- Card visit -->
+                <div class="card-collapse">
+                        <div class="header" (click)="isCollapseCardVisit = !isCollapseCardVisit" [attr.aria-expanded]="!isCollapseCardVisit"
+                            aria-controls="info-desc">
+                            <i class="fa fa-caret-down mr-3"></i>Card visit</div>
+                        <div class="body" id="info-desc" [ngbCollapse]="isCollapseCardVisit">
+                            <table class="w-100 table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td class="w-25 bg-light text-right label"></td>
+                                        <td class="w-75">
+                                            <div class="avatar-photo">
+                                                <div class="user-info__photo">
+                                                    <div class="user-info__photo-remove-btn" *ngIf="!isDefaultCardVisit">
+                                                        <a (click)="clearCardVisit()" title="Xóa hình">
+                                                            <i class="fa fa-times"></i>
+                                                        </a>
+                                                    </div>
+                                                    <img [src]="cardVisitSrc" alt="Card visit" />
+                                                    <div class="user-info__photo-change-btn w-100 mb-2 ">
+                                                        <input class="d-none" id="upload-card-visit" (click)="openCardVisitModal()"
+                                                            accept="image/*" />
+                                                        <label for="upload-card-visit">
+                                                            <a *ngIf="isDefaultCardVisit">
+                                                                <i class="fa fa-upload"></i>
+                                                                &nbsp;Thêm mới hình
+                                                            </a>
+                                                            <a *ngIf="!isDefaultCardVisit">
+                                                                <i class="fa fa-upload"></i>
+                                                                &nbsp;Thay đổi hình
+                                                            </a>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="text-visit-card-size position-relative"><i>* Tỷ lệ ảnh khuyến khích: 54x90mm, 255x155 pixel</i></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,716 @@
+<div *ngIf="listPermission && listPermission.length > 0 && branchesList">
+  <!-- <div class="row mt-3">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-2 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" (click)="viewAllClick($event.target.checked)" [(ngModel)]="viewAll">
+        <span class="custom-control-indicator"></span>
+      </label>
+      Tất cả
+    </div>
+    <div class="col-md-2 text-center text-nowrap">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--disabled" (click)="viewByCurrentUserClick($event.target.checked)"
+          [disabled]="viewAll" [(ngModel)]="viewByCurrentUser">
+        <span class="custom-control-indicator"></span>
+      </label>
+      Theo người dùng
+    </div>
+  </div> -->
+  <div class="row mt-3">
+    <div class="col-md-3 font-weight-bold"></div>
+    <div class="col-md-1 text-center px-0">Theo người dùng
+    </div>
+    <div class="col-md-1 text-center">
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md" *ngFor="let  itemBranch of  branchesList">
+          {{ itemBranch.text}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-md-3 font-weight-bold">Xem báo cáo thống kê</div>
+    <div class="col-md-1"></div>
+    <div class="col-md-1 text-center check-box-all">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" (click)="clickAllParentUserStatisPermission($event.target.checked)"
+          [checked]="getCheckedAllParentUserStatisPermission()">
+        <span class="custom-control-indicator"></span>
+      </label> -->
+
+      <img src="assets/images/check.png" width="18" alt="" (click)="clickAllParentUserStatisPermission(true)" *ngIf="!getCheckedAllParentUserStatisPermission()"
+        class="pointer">
+
+      <img src="assets/images/not-check.png" width="18" alt="" (click)="clickAllParentUserStatisPermission(false)" *ngIf="getCheckedAllParentUserStatisPermission()"
+        class="pointer">
+
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md check-box-all" *ngFor="let  itemBranch of  branchesList">
+          <!-- <label class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" (click)="clickParentUserStatisPermission(itemBranch.id, $event.target.checked)"
+              [checked]="getCheckedParentUserStatisPermission(itemBranch.id)">
+            <span class="custom-control-indicator"></span>
+          </label> -->
+
+          <img src="assets/images/check.png" width="18" alt="" (click)="clickParentUserStatisPermission(itemBranch.id, true)" *ngIf="!getCheckedParentUserStatisPermission(itemBranch.id)"
+            class="pointer">
+
+          <img src="assets/images/not-check.png" width="18" alt="" (click)="clickParentUserStatisPermission(itemBranch.id, false)"
+            *ngIf="getCheckedParentUserStatisPermission(itemBranch.id)" class="pointer">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Tiềm năng
+    </div>
+
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" (click)="clickAccordingToUser($event.target.value, $event.target.checked)"
+          value="StatisticsProspect" [checked]="getAccordingToUser('StatisticsProspect')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+
+    <div class="col-md-1 text-center">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" value="StatisticsProspect"
+          (click)="clickAllStatistics($event.target.value, $event.target.checked)" [checked]="getCheckedAllStatistics('StatisticsProspect')">
+        <span class="custom-control-indicator"></span>
+      </label> -->
+
+      <img src="assets/images/check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsProspect', true)" *ngIf="!getCheckedAllStatistics('StatisticsProspect') && !getAccordingToUser('StatisticsProspect')"
+        class="pointer">
+
+      <img src="assets/images/not-check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsProspect', false)" *ngIf="getCheckedAllStatistics('StatisticsProspect') && !getAccordingToUser('StatisticsProspect')"
+        class="pointer">
+
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md" *ngFor="let  itemBranch of  branchesList">
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="getAccordingToUser('StatisticsProspect')"
+              (click)="clickPermission($event.target.value, itemBranch.id)" value="StatisticsProspect" [checked]="getCheckedPermission('StatisticsProspect', itemBranch.id)">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+      <i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Khách hàng</div>
+
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" (click)="clickAccordingToUser($event.target.value, $event.target.checked)"
+          value="StatisticsCustomer" [checked]="getAccordingToUser('StatisticsCustomer')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+
+    <div class="col-md-1 text-center">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" value="StatisticsCustomer"
+          (click)="clickAllStatistics($event.target.value, $event.target.checked)" [checked]="getCheckedAllStatistics('StatisticsCustomer')">
+        <span class="custom-control-indicator"></span>
+      </label> -->
+
+      <img src="assets/images/check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsCustomer', true)" *ngIf="!getCheckedAllStatistics('StatisticsCustomer') && !getAccordingToUser('StatisticsCustomer')"
+        class="pointer">
+
+      <img src="assets/images/not-check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsCustomer', false)" *ngIf="getCheckedAllStatistics('StatisticsCustomer') && !getAccordingToUser('StatisticsCustomer')"
+        class="pointer">
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md" *ngFor="let  itemBranch of  branchesList">
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="getAccordingToUser('StatisticsCustomer')"
+              (click)="clickPermission($event.target.value, itemBranch.id)" value="StatisticsCustomer" [checked]="getCheckedPermission('StatisticsCustomer', itemBranch.id)">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Liên hệ</div>
+
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" (click)="clickAccordingToUser($event.target.value, $event.target.checked)"
+          value="StatisticsContact" [checked]="getAccordingToUser('StatisticsContact')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-1 text-center">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" value="StatisticsContact"
+          (click)="clickAllStatistics($event.target.value, $event.target.checked)" [checked]="getCheckedAllStatistics('StatisticsContact')">
+        <span class="custom-control-indicator"></span>
+      </label> -->
+
+      <img src="assets/images/check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsContact', true)" *ngIf="!getCheckedAllStatistics('StatisticsContact') && !getAccordingToUser('StatisticsContact')"
+        class="pointer">
+
+      <img src="assets/images/not-check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsContact', false)" *ngIf="getCheckedAllStatistics('StatisticsContact') && !getAccordingToUser('StatisticsContact')"
+        class="pointer">
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md" *ngFor="let  itemBranch of  branchesList">
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="getAccordingToUser('StatisticsContact')"
+              (click)="clickPermission($event.target.value, itemBranch.id)" value="StatisticsContact" [checked]="getCheckedPermission('StatisticsContact', itemBranch.id)">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Cơ hội</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" (click)="clickAccordingToUser($event.target.value, $event.target.checked)"
+          value="StatisticsOpportunity" [checked]="getAccordingToUser('StatisticsOpportunity')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-1 text-center">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" value="StatisticsOpportunity"
+          (click)="clickAllStatistics($event.target.value, $event.target.checked)" [checked]="getCheckedAllStatistics('StatisticsOpportunity')">
+        <span class="custom-control-indicator"></span>
+      </label> -->
+
+      <img src="assets/images/check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsOpportunity', true)" *ngIf="!getCheckedAllStatistics('StatisticsOpportunity') && !getAccordingToUser('StatisticsOpportunity')"
+        class="pointer">
+
+      <img src="assets/images/not-check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsOpportunity', false)" *ngIf="getCheckedAllStatistics('StatisticsOpportunity') && !getAccordingToUser('StatisticsOpportunity')"
+        class="pointer">
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md" *ngFor="let  itemBranch of  branchesList">
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="getAccordingToUser('StatisticsOpportunity')"
+              (click)="clickPermission($event.target.value, itemBranch.id)" value="StatisticsOpportunity" [checked]="getCheckedPermission('StatisticsOpportunity', itemBranch.id)">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Chiến dịch</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" (click)="clickAccordingToUser($event.target.value, $event.target.checked)"
+          value="StatisticsCampaign" [checked]="getAccordingToUser('StatisticsCampaign')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-1 text-center">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" value="StatisticsCampaign"
+          (click)="clickAllStatistics($event.target.value, $event.target.checked)" [checked]="getCheckedAllStatistics('StatisticsCampaign')">
+        <span class="custom-control-indicator"></span>
+      </label> -->
+
+      <img src="assets/images/check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsCampaign', true)" *ngIf="!getCheckedAllStatistics('StatisticsCampaign') && !getAccordingToUser('StatisticsCampaign')"
+        class="pointer">
+
+      <img src="assets/images/not-check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsCampaign', false)" *ngIf="getCheckedAllStatistics('StatisticsCampaign') && !getAccordingToUser('StatisticsCampaign')"
+        class="pointer">
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md" *ngFor="let  itemBranch of  branchesList">
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="getAccordingToUser('StatisticsCampaign')"
+              (click)="clickPermission($event.target.value, itemBranch.id)" value="StatisticsCampaign" [checked]="getCheckedPermission('StatisticsCampaign', itemBranch.id)">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Tổng hợp</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" (click)="clickAccordingToUser($event.target.value, $event.target.checked)"
+          value="StatisticsReport" [checked]="getAccordingToUser('StatisticsReport')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-1 text-center">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" value="StatisticsReport"
+          (click)="clickAllStatistics($event.target.value, $event.target.checked)" [checked]="getCheckedAllStatistics('StatisticsReport')">
+        <span class="custom-control-indicator"></span>
+      </label> -->
+
+      <img src="assets/images/check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsReport', true)" *ngIf="!getCheckedAllStatistics('StatisticsReport') && !getAccordingToUser('StatisticsReport')"
+        class="pointer">
+
+      <img src="assets/images/not-check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsReport', false)" *ngIf="getCheckedAllStatistics('StatisticsReport') && !getAccordingToUser('StatisticsReport')"
+        class="pointer">
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md" *ngFor="let  itemBranch of  branchesList">
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="getAccordingToUser('StatisticsReport')"
+              (click)="clickPermission($event.target.value, itemBranch.id)" value="StatisticsReport" [checked]="getCheckedPermission('StatisticsReport', itemBranch.id)">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+      <i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Lịch sử chăm sóc khách hàng</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" (click)="clickAccordingToUser($event.target.value, $event.target.checked)"
+          value="StatisticsHistoryCareCustomer" [checked]="getAccordingToUser('StatisticsHistoryCareCustomer')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-1 text-center">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" value="StatisticsHistoryCareCustomer"
+          (click)="clickAllStatistics($event.target.value, $event.target.checked)" [checked]="getCheckedAllStatistics('StatisticsHistoryCareCustomer')">
+        <span class="custom-control-indicator"></span>
+      </label> -->
+
+      <!-- <img src="assets/images/check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsHistoryCareCustomer', true)"
+        *ngIf="!getCheckedAllStatistics('StatisticsHistoryCareCustomer')" class="pointer">
+
+      <img src="assets/images/not-check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsHistoryCareCustomer', false)"
+        *ngIf="getCheckedAllStatistics('StatisticsHistoryCareCustomer')" class="pointer"> -->
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <!-- <div class="col-md" *ngFor="let  itemBranch of  branchesList">
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input custom-control-input--none" disabled (click)="clickPermission($event.target.value, itemBranch.id)"
+              value="StatisticsHistoryCareCustomer" [checked]="getCheckedPermission('StatisticsHistoryCareCustomer', itemBranch.id)">
+            <span class="custom-control-indicator history-customer--disable"></span>
+          </label>
+        </div> -->
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3 d-flex">
+      <i class="fa fa-angle-right mx-2 mt-1" aria-hidden="true"></i>
+      <span>Cơ cấu tiềm năng, cơ hội, và khách hàng</span>
+    </div>
+    <div class="col-md-1 text-center">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" (click)="clickAccordingToUser($event.target.value, $event.target.checked)"
+          value="StatisticsOpportunityProspectCustomer" [checked]="getAccordingToUser('StatisticsOpportunityProspectCustomer')">
+        <span class="custom-control-indicator"></span>
+      </label> -->
+    </div>
+    <div class="col-md-1 text-center">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" value="StatisticsOpportunityProspectCustomer"
+          (click)="clickAllStatistics($event.target.value, $event.target.checked)" [checked]="getCheckedAllStatistics('StatisticsOpportunityProspectCustomer')">
+        <span class="custom-control-indicator"></span>
+      </label> -->
+
+      <img src="assets/images/check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsOpportunityProspectCustomer', true)"
+        *ngIf="!getCheckedAllStatistics('StatisticsOpportunityProspectCustomer') && !getAccordingToUser('StatisticsOpportunityProspectCustomer')"
+        class="pointer">
+
+      <img src="assets/images/not-check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsOpportunityProspectCustomer', false)"
+        *ngIf="getCheckedAllStatistics('StatisticsOpportunityProspectCustomer') && !getAccordingToUser('StatisticsOpportunityProspectCustomer')"
+        class="pointer">
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md" *ngFor="let  itemBranch of  branchesList">
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="getAccordingToUser('StatisticsOpportunityProspectCustomer')"
+              (click)="clickPermission($event.target.value, itemBranch.id)" value="StatisticsOpportunityProspectCustomer" [checked]="getCheckedPermission('StatisticsOpportunityProspectCustomer', itemBranch.id)">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3 d-flex">
+      <i class="fa fa-angle-right mx-2 mt-1" aria-hidden="true"></i>
+      <span>
+        Hoạt động NVBH
+      </span>
+    </div>
+    <div class="col-md-1 text-center">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" (click)="clickAccordingToUser($event.target.value, $event.target.checked)"
+          value="StatisticsActivityNVBH" [checked]="getAccordingToUser('StatisticsActivityNVBH')">
+        <span class="custom-control-indicator"></span>
+      </label> -->
+    </div>
+    <div class="col-md-1 text-center">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" value="StatisticsActivityNVBH"
+          (click)="clickAllStatistics($event.target.value, $event.target.checked)" [checked]="getCheckedAllStatistics('StatisticsActivityNVBH')">
+        <span class="custom-control-indicator"></span>
+      </label> -->
+
+      <img src="assets/images/check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsActivityNVBH', true)" *ngIf="!getCheckedAllStatistics('StatisticsActivityNVBH') && !getAccordingToUser('StatisticsActivityNVBH')"
+        class="pointer">
+
+      <img src="assets/images/not-check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsActivityNVBH', false)" *ngIf="getCheckedAllStatistics('StatisticsActivityNVBH') && !getAccordingToUser('StatisticsActivityNVBH')"
+        class="pointer">
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md" *ngFor="let  itemBranch of  branchesList">
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="getAccordingToUser('StatisticsActivityNVBH')"
+              (click)="clickPermission($event.target.value, itemBranch.id)" value="StatisticsActivityNVBH" [checked]="getCheckedPermission('StatisticsActivityNVBH', itemBranch.id)">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3 d-flex">
+      <i class="fa fa-angle-right mx-2 mt-1" aria-hidden="true"></i>
+      <span>
+        Số lượng KH tiềm năng các SR
+      </span>
+    </div>
+    <div class="col-md-1 text-center">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" (click)="clickAccordingToUser($event.target.value, $event.target.checked)"
+          value="StatisticsCustomerProspect" [checked]="getAccordingToUser('StatisticsCustomerProspect')" disabled>
+        <span class="custom-control-indicator"></span>
+      </label> -->
+    </div>
+    <div class="col-md-1 text-center">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" value="StatisticsCustomerProspect"
+          (click)="clickAllStatistics($event.target.value, $event.target.checked)" [checked]="getCheckedAllStatistics('StatisticsCustomerProspect')">
+        <span class="custom-control-indicator"></span>
+      </label> -->
+
+      <img src="assets/images/check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsCustomerProspect', true)" *ngIf="!getCheckedAllStatistics('StatisticsCustomerProspect') && !getAccordingToUser('StatisticsCustomerProspect')"
+        class="pointer">
+
+      <img src="assets/images/not-check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsCustomerProspect', false)"
+        *ngIf="getCheckedAllStatistics('StatisticsCustomerProspect') && !getAccordingToUser('StatisticsCustomerProspect')"
+        class="pointer">
+
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md" *ngFor="let  itemBranch of  branchesList">
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="getAccordingToUser('StatisticsCustomerProspect')"
+              (click)="clickPermission($event.target.value, itemBranch.id)" value="StatisticsCustomerProspect" [checked]="getCheckedPermission('StatisticsCustomerProspect', itemBranch.id)">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3 d-flex">
+      <i class="fa fa-angle-right mx-2 mt-1" aria-hidden="true"></i>
+      <span>
+        Các nguồn tiềm năng
+      </span>
+    </div>
+    <div class="col-md-1 text-center">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" (click)="clickAccordingToUser($event.target.value, $event.target.checked)"
+          value="StatisticsProspectSource" [checked]="getAccordingToUser('StatisticsProspectSource')">
+        <span class="custom-control-indicator"></span>
+      </label> -->
+    </div>
+    <div class="col-md-1 text-center">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" value="StatisticsProspectSource"
+          (click)="clickAllStatistics($event.target.value, $event.target.checked)" [checked]="getCheckedAllStatistics('StatisticsProspectSource')">
+        <span class="custom-control-indicator"></span>
+      </label> -->
+
+      <img src="assets/images/check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsProspectSource', true)" *ngIf="!getCheckedAllStatistics('StatisticsProspectSource') && !getAccordingToUser('StatisticsProspectSource')"
+        class="pointer">
+
+      <img src="assets/images/not-check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsProspectSource', false)"
+        *ngIf="getCheckedAllStatistics('StatisticsProspectSource') && !getAccordingToUser('StatisticsProspectSource')" class="pointer">
+
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md" *ngFor="let  itemBranch of  branchesList">
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="getAccordingToUser('StatisticsProspectSource')"
+              (click)="clickPermission($event.target.value, itemBranch.id)" value="StatisticsProspectSource" [checked]="getCheckedPermission('StatisticsProspectSource', itemBranch.id)">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3 d-flex">
+      <i class="fa fa-angle-right mx-2 mt-1" aria-hidden="true"></i>
+      <span>
+        Sự việc, hoạt động của công ty
+      </span>
+    </div>
+    <div class="col-md-1 text-center">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" (click)="clickAccordingToUser($event.target.value, $event.target.checked)"
+          value="StatisticsActivity" [checked]="getAccordingToUser('StatisticsActivity')">
+        <span class="custom-control-indicator"></span>
+      </label> -->
+    </div>
+    <div class="col-md-1 text-center">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" value="StatisticsActivity"
+          (click)="clickAllStatistics($event.target.value, $event.target.checked)" [checked]="getCheckedAllStatistics('StatisticsActivity')">
+        <span class="custom-control-indicator"></span>
+      </label> -->
+
+      <img src="assets/images/check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsActivity', true)" *ngIf="!getCheckedAllStatistics('StatisticsActivity') && !getAccordingToUser('StatisticsActivity')"
+        class="pointer">
+
+      <img src="assets/images/not-check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsActivity', false)" *ngIf="getCheckedAllStatistics('StatisticsActivity') && !getAccordingToUser('StatisticsActivity')"
+        class="pointer">
+
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md" *ngFor="let  itemBranch of  branchesList">
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="getAccordingToUser('StatisticsActivity')"
+              (click)="clickPermission($event.target.value, itemBranch.id)" value="StatisticsActivity" [checked]="getCheckedPermission('StatisticsActivity', itemBranch.id)">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3 d-flex">
+      <i class="fa fa-angle-right mx-2 mt-1" aria-hidden="true"></i>
+      <span>
+        Danh sách Khách hàng tiềm năng
+      </span>
+    </div>
+
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" (click)="clickAccordingToUser($event.target.value, $event.target.checked)"
+          value="StatisticsListProspect" [checked]="getAccordingToUser('StatisticsListProspect')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+
+    <div class="col-md-1 text-center">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" value="StatisticsListProspect"
+          (click)="clickAllStatistics($event.target.value, $event.target.checked)" [checked]="getCheckedAllStatistics('StatisticsListProspect')">
+        <span class="custom-control-indicator"></span>
+      </label> -->
+
+      <img src="assets/images/check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsListProspect', true)" *ngIf="!getCheckedAllStatistics('StatisticsListProspect') && !getAccordingToUser('StatisticsListProspect')"
+        class="pointer">
+
+      <img src="assets/images/not-check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsListProspect', false)" *ngIf="getCheckedAllStatistics('StatisticsListProspect') && !getAccordingToUser('StatisticsListProspect')"
+        class="pointer">
+
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md" *ngFor="let  itemBranch of  branchesList">
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="getAccordingToUser('StatisticsListProspect')"
+              (click)="clickPermission($event.target.value, itemBranch.id)" value="StatisticsListProspect" [checked]="getCheckedPermission('StatisticsListProspect', itemBranch.id)">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3 d-flex">
+      <i class="fa fa-angle-right mx-2 mt-1" aria-hidden="true"></i>
+      <span>
+        Danh sách Tiềm năng theo nguồn
+      </span>
+    </div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" (click)="clickAccordingToUser($event.target.value, $event.target.checked)"
+          value="StatisticsListProspectSource" [checked]="getAccordingToUser('StatisticsListProspectSource')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-1 text-center">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" value="StatisticsListProspectSource"
+          (click)="clickAllStatistics($event.target.value, $event.target.checked)" [checked]="getCheckedAllStatistics('StatisticsListProspectSource')">
+        <span class="custom-control-indicator"></span>
+      </label> -->
+
+      <img src="assets/images/check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsListProspectSource', true)"
+        *ngIf="!getCheckedAllStatistics('StatisticsListProspectSource') && !getAccordingToUser('StatisticsListProspectSource')"
+        class="pointer">
+
+      <img src="assets/images/not-check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsListProspectSource', false)"
+        *ngIf="getCheckedAllStatistics('StatisticsListProspectSource') && !getAccordingToUser('StatisticsListProspectSource')"
+        class="pointer">
+
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md" *ngFor="let  itemBranch of  branchesList">
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="getAccordingToUser('StatisticsListProspectSource')"
+              (click)="clickPermission($event.target.value, itemBranch.id)" value="StatisticsListProspectSource" [checked]="getCheckedPermission('StatisticsListProspectSource', itemBranch.id)">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3 d-flex">
+      <i class="fa fa-angle-right mx-2 mt-1" aria-hidden="true"></i>
+      <span>
+        Danh sách Sự kiện, Công việc
+      </span>
+    </div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" (click)="clickAccordingToUser($event.target.value, $event.target.checked)"
+          value="StatisticsListEventWork" [checked]="getAccordingToUser('StatisticsListEventWork')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+    <div class="col-md-1 text-center">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" value="StatisticsListEventWork"
+          (click)="clickAllStatistics($event.target.value, $event.target.checked)" [checked]="getCheckedAllStatistics('StatisticsListEventWork')">
+        <span class="custom-control-indicator"></span>
+      </label> -->
+
+      <img src="assets/images/check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsListEventWork', true)" *ngIf="!getCheckedAllStatistics('StatisticsListEventWork') && !getAccordingToUser('StatisticsListEventWork')"
+        class="pointer">
+
+      <img src="assets/images/not-check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsListEventWork', false)"
+        *ngIf="getCheckedAllStatistics('StatisticsListEventWork') && !getAccordingToUser('StatisticsListEventWork')" class="pointer">
+
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md" *ngFor="let  itemBranch of  branchesList">
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="getAccordingToUser('StatisticsListEventWork')"
+              (click)="clickPermission($event.target.value, itemBranch.id)" value="StatisticsListEventWork" [checked]="getCheckedPermission('StatisticsListEventWork', itemBranch.id)">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3 d-flex">
+      <i class="fa fa-angle-right mx-2 mt-1" aria-hidden="true"></i>
+      <span>
+        Danh sách Cơ hội của Showroom
+      </span>
+    </div>
+    <div class="col-md-1 text-center">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" (click)="clickAccordingToUser($event.target.value, $event.target.checked)"
+          value="StatisticsListOpportunityByBranch" [checked]="getAccordingToUser('StatisticsListOpportunityByBranch')">
+        <span class="custom-control-indicator"></span>
+      </label> -->
+    </div>
+    <div class="col-md-1 text-center">
+      <!-- <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" value="StatisticsListOpportunityByBranch"
+          (click)="clickAllStatistics($event.target.value, $event.target.checked)" [checked]="getCheckedAllStatistics('StatisticsListOpportunityByBranch')">
+        <span class="custom-control-indicator"></span>
+      </label> -->
+
+      <img src="assets/images/check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsListOpportunityByBranch', true)"
+        *ngIf="!getCheckedAllStatistics('StatisticsListOpportunityByBranch') && !getAccordingToUser('StatisticsListOpportunityByBranch')"
+        class="pointer">
+
+      <img src="assets/images/not-check.png" width="18" alt="" (click)="clickAllStatistics('StatisticsListOpportunityByBranch', false)"
+        *ngIf="getCheckedAllStatistics('StatisticsListOpportunityByBranch') && !getAccordingToUser('StatisticsListOpportunityByBranch')"
+        class="pointer">
+
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md" *ngFor="let  itemBranch of  branchesList">
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="getAccordingToUser('StatisticsListOpportunityByBranch')"
+              (click)="clickPermission($event.target.value, itemBranch.id)" value="StatisticsListOpportunityByBranch" [checked]="getCheckedPermission('StatisticsListOpportunityByBranch', itemBranch.id)">
+            <span class="custom-control-indicator"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<div class="my-4 text-center">
+  <button class="btn btn-secondary ml-2" routerLink="../permission">
+    <i class="fa fa-angle-left mx-2" aria-hidden="true"></i> Trở về
+  </button>
+  <button class="btn btn-primary ml-2 cursor-disabled" disabled>
+    Tiếp
+    <i class="fa fa-angle-right mx-2" aria-hidden="true"></i>
+  </button>
+</div>
+
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.7)" size="medium" color="#fff" type="ball-clip-rotate-multiple"></ngx-spinner>

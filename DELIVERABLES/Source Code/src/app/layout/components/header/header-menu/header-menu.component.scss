@@ -1,0 +1,15 @@
+.nav-menu-bar {
+    .nav-link {
+        color: #fff;
+        opacity: 0.5;
+        &:hover {
+            opacity: 1;
+        }
+    }
+    .nav-item{
+        margin-right: 2px;
+    }
+    .router-link-active {
+        opacity: 1;
+    }
+}

@@ -1,0 +1,23 @@
+.main-container {
+    margin-top: 55px;
+    margin-left: 200px;
+    padding: 0 25px;
+    -ms-overflow-x: hidden;
+    overflow-x: hidden; // overflow-y: scroll;
+    position: relative;
+    overflow: visible;
+}
+
+@media screen and (max-width: 992px) {
+    .main-container {
+        margin-left: 0px !important;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    app-menu {
+        display: none;
+    }
+}
+
+#footer { position: fixed; bottom: 0; }

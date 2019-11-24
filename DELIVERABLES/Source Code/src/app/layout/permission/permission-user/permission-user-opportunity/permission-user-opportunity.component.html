@@ -1,0 +1,177 @@
+<div *ngIf="listPermission && listPermission.length > 0">
+  <div class="row mt-3">
+    <div class="col-md-3"><b>Xem cơ hội</b></div>
+    <div class="col-md-2 text-center center-parent">
+      <label class="custom-control custom-checkbox mb-0 pr-3">
+        <input type="checkbox" class="custom-control-input" (click)="viewAllClick($event.target.checked)" [(ngModel)]="viewAll">
+        <span class="custom-control-indicator"></span>
+      </label>
+      Tất cả
+    </div>
+    <div class="col-md-2 text-center  text-nowrap center-parent">
+      <label class="custom-control custom-checkbox mb-0 pr-3">
+        <input type="checkbox" class="custom-control-input custom-control-input--disabled" (click)="viewUserClick($event.target.checked)" [disabled]="viewAll" [(ngModel)]="viewByCurrentUser">
+        <span class="custom-control-indicator"></span>
+      </label>
+      Theo người dùng
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-md-3 font-weight-bold">Danh sách cơ hội</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" [checked]="checkAllProspectList" (click)="toggleProspectList($event.target.checked)">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Thêm mới cơ hội</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" (click)="clickPermission($event.target.value)" value="OpportunityAddOpportunity" [checked]="getCheckedPermission('OpportunityAddOpportunity')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Xem thông tin cơ hội</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" (click)="clickPermission($event.target.value)" value="OpportunityViewOpportunityInformation" [checked]="getCheckedPermission('OpportunityViewOpportunityInformation')" #viewProspectInfo>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Sửa cơ hội</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" (click)="clickPermission($event.target.value)" value="OpportunityEditOpportunity" [checked]="getCheckedPermission('OpportunityEditOpportunity')" #editOpportunity>
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-double-right ml-3 mr-2" aria-hidden="true"></i>Cấu hình nguồn cơ hội</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms || !editOpportunity.checked" (click)="clickPermission($event.target.value)" value="OpportunityConfigCustomerResource" [checked]="getCheckedPermission('OpportunityConfigCustomerResource') && editOpportunity.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-double-right ml-3 mr-2" aria-hidden="true"></i>Cấu hình Giai đoạn</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms || !editOpportunity.checked" (click)="clickPermission($event.target.value)" value="OpportunityConfigCustomerStep" [checked]="getCheckedPermission('OpportunityConfigCustomerStep') && editOpportunity.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-double-right ml-3 mr-2" aria-hidden="true"></i>Cấu hình Kênh tiếp cận</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms || !editOpportunity.checked" (click)="clickPermission($event.target.value)" value="OpportunityConfigApproachChannel" [checked]="getCheckedPermission('OpportunityConfigApproachChannel') && editOpportunity.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Xóa cơ hội</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" (click)="clickPermission($event.target.value)" value="OpportunityDeleteOpportunity" [checked]="getCheckedPermission('OpportunityDeleteOpportunity')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Xuất file</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms" (click)="clickPermission($event.target.value)" value="OpportunityExportFile" [checked]="getCheckedPermission('OpportunityExportFile')">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-md-3 font-weight-bold">Thông tin cơ hội</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms || !viewProspectInfo.checked" [checked]="checkAllProspectInfo && viewProspectInfo.checked" (click)="toggleProspectInfo($event.target.checked)">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Sơ lược</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms || !viewProspectInfo.checked" (click)="clickPermission($event.target.value)" value="OpportunityOpportunitySummary" [checked]="getCheckedPermission('OpportunityOpportunitySummary') && viewProspectInfo.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Xem chi tiết</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms || !viewProspectInfo.checked" (click)="clickPermission($event.target.value)" value="OpportunityViewOpportunityDetail" [checked]="getCheckedPermission('OpportunityViewOpportunityDetail') && viewProspectInfo.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Xem bình luận</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms || !viewProspectInfo.checked" (click)="clickPermission($event.target.value)" value="OpportunityViewComments" [checked]="getCheckedPermission('OpportunityViewComments') && viewProspectInfo.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Đăng bình luận</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms || !viewProspectInfo.checked" (click)="clickPermission($event.target.value)" value="OpportunityAddComment" [checked]="getCheckedPermission('OpportunityAddComment') && viewProspectInfo.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Các hoạt động</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms || !viewProspectInfo.checked" (click)="clickPermission($event.target.value)" value="OpportunityActivites" [checked]="getCheckedPermission('OpportunityActivites') && viewProspectInfo.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3"><i class="fa fa-angle-right mx-2" aria-hidden="true"></i>Các cập nhật</div>
+    <div class="col-md-1 text-center">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input custom-control-input--none" [disabled]="disabledPms || !viewProspectInfo.checked" (click)="clickPermission($event.target.value)" value="OpportunityHistories" [checked]="getCheckedPermission('OpportunityHistories') && viewProspectInfo.checked">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="my-4 text-center">
+    <button class="btn btn-secondary ml-2" routerLink="../contact">
+      <i class="fa fa-angle-left mx-2" aria-hidden="true"></i> Trở về
+    </button>
+    <button class="btn btn-primary ml-2" routerLink="../campaign">
+      Tiếp <i class="fa fa-angle-right mx-2" aria-hidden="true"></i>
+    </button>
+  </div>
+</div>

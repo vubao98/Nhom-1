@@ -1,0 +1,147 @@
+<div>
+ <div class="search-box d-flex">
+    <h5 class="mr-auto">Danh sách {{releatedType}} liên quan</h5>
+    <div class="input-group">
+      <span class="input-group-addon">Tìm kiếm theo</span>
+      <input type="text" class="form-control" placeholder="Họ tên, điện thoại, email" (keyup)="searchTerm$.next($event.target.value)">
+    </div>
+    <button type="button" class="btn btn-primary ml-2" (click)="exportFileExcel()">Xuất file</button>
+  </div>
+  <div class="mt-3 table-responsive">
+    <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-selection stripe row-border hover prospects-list-table">
+      <thead>
+        <tr>
+          <th class="text-nowrap text-center ">
+            STT
+          </th>
+          <th class="text-nowrap">Họ và tên</th>
+          <th class="text-nowrap">Chức vụ</th>
+          <th class="text-nowrap">Công ty</th>
+          <!-- <th class="text-nowrap">Vai trò với HBC</th> -->
+          <th class="text-nowrap">Điện thoại</th>
+          <th class="text-nowrap">Email</th>
+          <th class="text-nowrap">Địa chỉ công ty</th>
+          <th class="text-nowrap">Địa chỉ nhà riêng</th>
+          <th class="text-nowrap">Tỉnh/thành phố</th>
+          <th class="text-nowrap">Tầm quan trọng</th>
+          <th class="text-nowrap">Người/nhóm phụ trách</th>
+          <th class="text-nowrap">Cá nhân/bộ phận liên lạc</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="campaignModel.contacts.length > 0">
+        <tr *ngFor="let item of listData; let i = index">
+          <td class="text-center b-pin-col-sticky-col td-stt--pad">
+            {{i + 1}}
+          </td>
+          <td>
+            <a [routerLink]="['/contact/detail', item.id]" [title]="item.name">{{ item.name }}</a>
+          </td>
+          <td>{{item.jobTitle || 'Không có'}}</td> <!-- chức vụ -->
+          <td>
+            <ng-container *ngIf="!item.customerContactGroups || (item.customerContactGroups && item.customerContactGroups.length === 0)">
+              <span>Không có</span>
+            </ng-container>
+            <ng-container>
+              <a *ngFor="let customer of item.customerContactGroups" class="hyperlink" (click)="goToDeitalCustomer(customer.id)">
+                {{customer.customer.name}}
+              </a>
+            </ng-container>
+          </td> <!-- công ty -->
+          <!-- <td>{{(item.relationHBC | translate) || 'Không có'}}</td> vai trò với HBC -->
+          <td>
+            <span appPhoneNumberCallable>{{ item.cellularPhone }}</span>
+            <span *ngIf="!item.cellularPhone">Không có</span>
+          </td> <!-- điện thoại -->
+          <td>
+            <a [href]="item.email2 ? 'mailto:' + item.email2 : 'mailto:'" [title]="item.email2">{{ item.email2 }}</a>
+            <span *ngIf="!item.email2">Không có</span>
+          </td> <!-- email -->
+          <td>{{item.address || 'Không có'}}</td> <!-- địa chỉ công ty -->
+          <td>{{item.address2 || 'Không có'}}</td> <!-- địa chỉ nhà riêng -->
+          <td>{{getLocation(item.location, 'StateProvince') || 'Không có'}}</td> <!-- tỉnh/thành phố -->
+          <td>{{(item.significantType | translate) || 'Không có'}}</td> <!-- tầm quan trọng -->
+          <td>{{ (item.employee && item.employee.name) ? (item.employee && item.employee.name) : (item.employeeGroup &&
+            item.employeeGroup.name) ? (item.employeeGroup && item.employeeGroup.name) : 'Không có' }}</td>
+          <!-- người/nhóm phụ trách -->
+          <td>{{(item.departments && item.departments.name) ? (item.departments && item.departments.name) : 'Không có'
+            }}</td> <!-- cá nhân/bộ phận liên lạc -->
+        </tr>
+      </tbody>
+      <tbody *ngIf="campaignModel.customers.length > 0">
+        <tr *ngFor="let item of listData; let i = index">
+          <td class="text-center b-pin-col-sticky-col td-stt--pad">
+            {{i + 1}}
+          </td>
+          <td>
+            <a [routerLink]="['/customer/detail', item.id]" [title]="item.name">{{ item.name }}</a>
+          </td>
+          <td>{{item.jobTitle || 'Không có'}}</td> <!-- chức vụ -->
+          <td>
+            Không có
+          </td> <!-- công ty -->
+          <!-- <td>{{(item.customerCategories | translate) || 'Không có'}}</td> vai trò với HBC -->
+          <td>
+            <span appPhoneNumberCallable>{{ item.tel1 }}</span>
+            <span *ngIf="!item.tel1">Không có</span>
+          </td> <!-- điện thoại -->
+          <td>
+            <a [href]="item.email1 ? 'mailto:' + item.email1 : 'mailto:'" [title]="item.email1">{{ item.email1 }}</a>
+            <span *ngIf="!item.email1">Không có</span>
+          </td> <!-- email -->
+          <td>{{item.address || 'Không có'}}</td> <!-- địa chỉ công ty -->
+          <td>{{item.address2 || 'Không có'}}</td> <!-- địa chỉ nhà riêng -->
+          <td>{{getLocation(item.location, 'StateProvince') || 'Không có'}}</td> <!-- tỉnh/thành phố -->
+          <td>{{(item.significantType | translate) || 'Không có'}}</td> <!-- tầm quan trọng -->
+          <td>{{ (item.employee && item.employee.name) ? (item.employee && item.employee.name) : (item.employeeGroup &&
+            item.employeeGroup.name) ? (item.employeeGroup && item.employeeGroup.name) : 'Không có' }}</td>
+          <!-- người/nhóm phụ trách -->
+          <td>{{(item.departments && item.departments.name) ? (item.departments && item.departments.name) : 'Không có'
+            }}</td> <!-- cá nhân/bộ phận liên lạc -->
+        </tr>
+      </tbody>
+      <tbody *ngIf="campaignModel.prospects.length > 0">
+          <tr *ngFor="let item of listData; let i = index">
+            <td class="text-center b-pin-col-sticky-col td-stt--pad">
+              {{i + 1}}
+            </td>
+            <td>
+              <a [routerLink]="['/prospect/detail', item.id]" [title]="item.name">{{ item.name }}</a>
+            </td>
+            <td>{{item.jobTitle || 'Không có'}}</td> <!-- chức vụ -->
+            <td>
+              {{item.company || 'Không có'}}
+            </td> <!-- công ty -->
+            <!-- <td>{{(item.customerCategories | translate) || 'Không có'}}</td> vai trò với HBC -->
+            <td>
+              <span appPhoneNumberCallable>{{ item.phone }}</span>
+              <span *ngIf="!item.phone">Không có</span>
+            </td> <!-- điện thoại -->
+            <td>
+              <a [href]="item.email ? 'mailto:' + item.email : 'mailto:'" [title]="item.email">{{ item.email }}</a>
+              <span *ngIf="!item.email">Không có</span>
+            </td> <!-- email -->
+            <td>Không có</td> <!-- địa chỉ công ty -->
+            <td>{{item.address || 'Không có'}}</td> <!-- địa chỉ nhà riêng -->
+            <td>{{getLocation(item.location, 'StateProvince') || 'Không có'}}</td> <!-- tỉnh/thành phố -->
+            <td>{{(item.significantType | translate) || 'Không có'}}</td> <!-- tầm quan trọng -->
+            <td>{{ (item.employee && item.employee.name) ? (item.employee && item.employee.name) : (item.employeeGroup &&
+              item.employeeGroup.name) ? (item.employeeGroup && item.employeeGroup.name) : 'Không có' }}</td>
+            <!-- người/nhóm phụ trách -->
+            <td>{{(item.departments && item.departments.name) ? (item.departments && item.departments.name) : 'Không có'
+              }}</td> <!-- cá nhân/bộ phận liên lạc -->
+          </tr>
+        </tbody>
+    </table>
+    <div class="text-center mt-3" *ngIf="listData == null">Không có dữ liệu</div>
+  </div>
+</div>
+<!-- <div *ngIf="!(campaignModel.relatedToType == 'Contact' && checkContactViewInformation) || !(campaignModel.relatedToType == 'Customer' && isPmsViewList) || !(campaignModel.relatedToType == 'Prospect' && checkProspectProspectInformation)"> -->
+    <!-- <div *ngIf="!((campaignModel.relatedToType == 'Contact' && checkContactViewInformation) || (campaignModel.relatedToType == 'Customer' && isPmsViewList) || (campaignModel.relatedToType == 'Prospect' && checkProspectProspectInformation))">
+  <p class="text-center">Bạn không có quyền xem dữ liệu này</p>
+</div> -->
+<!-- <div *ngIf="!(campaignModel.relatedToType == 'Customer' && isPmsViewList)">
+    <p class="text-center">Bạn không có quyền xem dữ liệu này</p>
+</div>
+<div *ngIf="!(campaignModel.relatedToType == 'Prospect' && checkProspectProspectInformation)">
+    <p class="text-center">Bạn không có quyền xem dữ liệu này</p>
+</div> -->

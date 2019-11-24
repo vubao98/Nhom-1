@@ -1,0 +1,276 @@
+@media only screen and (max-width: 1600px) {
+    table.dataTable {
+        th,
+        td {
+            max-width: 120px;
+        }
+    }
+}
+
+@media only screen and (max-width: 1366px) {
+    table.dataTable {
+        th,
+        td {
+            max-width: 80px;
+        }
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .filter-bar{
+        zoom: 0.75;
+    }
+    table.dataTable {
+        th,
+        td {
+            max-width: 70px;
+        }
+    }
+}
+
+@media only screen and (max-width: 1024px) {
+
+    table.dataTable {
+        th,
+        td {
+            max-width: 40px;
+        }
+    }
+}
+
+.btn-clear-search {
+    position: absolute;
+    right: 0.25rem;
+    z-index: 5;
+    top: .6rem;
+    cursor: pointer;
+}
+
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+}
+.fileUpload input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+a{
+    cursor: pointer;
+}
+
+
+$font-size: 20px; // <-- Adjust this only!
+$star-width: 1.5em;
+$max-stars: 5;
+
+
+
+.rating {
+  margin: 10px 0;
+}
+
+.rating i {
+  display: inline-block;
+  width: 0;
+  height: $star-width;
+  border-width: 0 ( $star-width / 2 );
+  border-style: solid;
+  border-color: #eee;
+  border-radius: .22em;
+  color: white;
+  background: #eee;
+  font-style: normal;
+  line-height: $star-width + 0.1em;
+  text-indent: -0.5em;
+  text-shadow: 1px 0 1px hsl(0, 0%, 70%);
+}
+
+
+// Revamping the stars-color function
+// To use a list and some logic
+// In order to avoid repeted code
+// Also add a fallback color, just in case (#333)
+@function stars-color($stars) {
+  @if type-of($stars) != number {
+    @warn '#{$stars} is not a number for `stars-color`.';
+    @return false;
+  }
+  
+  $colors: #cc8b1f #dcb228 #f0991e #f26a2c #dd050b;
+  @return if($stars <= length($colors), nth($colors, $stars), #333);
+}
+
+// Main loop, looping through 1 to 4 (instead of 5)
+// 1. Instanciating a list that will be used as a CSS selector
+// 2. Caching the return from stars-color to speed up compilation
+@for $i from 1 to $max-stars {
+  $selector: (); // 1
+  $color: stars-color($i); // 2
+  
+  // Inner loop not dumping anything
+  // 1. Only appending stuff to $selector
+  // 2. Using the [attr^='X'] selector to target both X and X.Y
+  // 3. Forcing comma separated list for the selector to work
+  @for $j from 1 through $i {
+    $selector: append(
+      $selector, // 1
+      unquote("[data-rate^='#{$i}'] .star-#{$j}"), // 2
+      comma // 3
+    );  
+  }
+  
+  // Using the concatenated selector
+  #{$selector} {
+    border-color: $color;
+    background: $color;
+  }
+
+  // For half ratings only, applying color to left border of next star
+  [data-rate='#{$i + 0.5}'] .star-#{$i + 1} {
+    border-left-color: $color;
+  }
+}
+
+// Dealing with 5-stars rating in a very simple way
+// Since there is no 5.5 rating possible
+$color: stars-color($max-stars);
+[data-rate='#{$max-stars}'] i {
+  border-color: $color;
+  background: $color;
+}
+
+
+/** Print */
+
+@media print {
+  .rating {
+    -webkit-print-color-adjust: exact;
+    i {
+      text-shadow: none;
+    }
+  }
+}
+.stt{
+    margin-top: 0.5rem;
+    padding-left: 0.6rem;
+}
+
+.filter-bar {
+    width: calc(100% - 80px);
+}
+.col-setting {
+    width: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fafbfc;
+    padding: 1.1rem 1rem;
+    margin: 1rem 0;
+    margin-left: 0.5rem;
+    border: 1px solid #ededee;
+}
+
+.popup-dynamic-col {
+    padding: 10px 20px 0 20px;
+    min-width: 700px;
+    min-height: 285px;
+
+    .wrapper {
+        height: 130px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-column-gap: 10px;
+        grid-row-gap: 1em;
+        overflow: hide;
+        overflow-y: scroll;
+
+        .form-check-label {
+            padding: 0;
+        }
+
+        /* width */
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        /* Track */
+        &::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        /* Handle */
+        &::-webkit-scrollbar-thumb {
+            background: #d2d2d2;
+        }
+
+        /* Handle on hover */
+        &::-webkit-scrollbar-thumb:hover {
+            background: #d2d2d2;
+        }
+    }
+}
+
+.dropdown-toggle::after {
+    content: none;
+}
+
+.btn-col {
+    cursor: pointer;
+
+    i:first-child {
+        color: #625141;
+        margin-top: 3px;
+        margin-right: 6px;
+    }
+
+    i:last-child {
+        margin-left: 4px;
+        margin-top: 3px;
+    }
+}
+
+
+.th-stt-pad{
+    padding-left: 1rem;
+}
+
+.stt-checkbox--mar{
+    margin-left: 0;
+    margin-right: 0
+}
+
+.td-stt--pad{
+    padding-left: 0.4rem;
+}
+.relative{
+    position: relative;
+    width: 13rem;
+    height: 20px; 
+}
+.absolute{
+    position: absolute;
+    padding-left: 0.7rem;
+    width: auto;
+    height: auto;
+    top: 0;
+    left: 0;
+}
+.buttont{
+    margin-top: 4px;
+}
+.span-cursor {
+    cursor: pointer;
+    color: #00a0e3
+}
+.hyperlink {
+    color: #19a3b9 !important;
+    cursor: pointer;
+ }
