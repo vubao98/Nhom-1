@@ -1,7 +1,6 @@
-# BYS CRM for Mộc Hòa Bình
+# CRM MỘC HÒA BÌNH
 
-## http://demo.bys.vn/mochoabinh/crm
+## http://115.79.35.119:9002/
 
-## Account login : admin/1
+## Account login for teacher : nhamct/123456
 
-### API Endpoint: http://demo.bys.vn:6868/mhb-crm
