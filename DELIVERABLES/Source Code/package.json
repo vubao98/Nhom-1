@@ -63,7 +63,7 @@
     "ngx-loading": "^2.0.1",
     "ngx-rating": "0.0.9",
     "ngx-spinner": "^6.0.0",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.13.1",
     "primeng": "^5.0.2",
     "rxjs": "^5.5.10",
     "rxjs-compat": "^6.2.1",
